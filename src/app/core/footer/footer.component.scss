@@ -1,0 +1,36 @@
+input[type="email"] {
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid white;
+    color: white;
+    border-radius: 0px;
+
+    &::placeholder {
+        color: rgb(166, 166, 166);
+    }
+
+    &:focus::placeholder {
+        color: transparent;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    &:active {
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+.border-secondary {
+    border-color: #4d4d4d !important;
+}
+
+.navbar-brand {
+    margin: 0 auto;
+    text-align: center;
+}

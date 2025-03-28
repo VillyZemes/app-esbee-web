@@ -1,0 +1,85 @@
+@keyframes zoomInOut {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+#landingCarousel .carousel-item img {
+  object-fit: cover;
+  position: relative;
+  z-index: 0;
+  animation: zoomInOut 10s ease-in-out infinite;
+}
+
+#landingCarousel .carousel-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); // Black overlay with 50% transparency
+  z-index: 1;
+}
+
+#landingCarousel .carousel-item {
+  position: relative;
+  height: 100vh; // Full-screen height
+}
+
+#landingCarousel .carousel-caption {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2; // Ensure text is above the overlay
+  text-align: center;
+  width: 100%; // Ensure proper alignment on smaller screens
+  padding: 0 15px; // Add padding for smaller devices
+}
+
+#landingCarousel .carousel-caption .btn {
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+#landingCarousel .carousel-control-prev,
+#landingCarousel .carousel-control-next {
+  z-index: 3; // Ensure arrows are above the text
+}
+
+#landingCarousel .carousel-inner {
+  height: 100vh; // Full-screen height for the carousel container
+}
+
+#landingCarousel .carousel.slide {
+  height: 100vh; // Full-screen height for the entire carousel
+}
+
+
+
+
+#productCarousel .carousel-control-prev-icon {
+  position: absolute;
+  left: 10px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e");
+}
+
+#productCarousel .carousel-control-next-icon {
+  position: absolute;
+  right: 10px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.sb-product-list-img {
+  max-height: 300px;
+  object-fit: cover;
+}

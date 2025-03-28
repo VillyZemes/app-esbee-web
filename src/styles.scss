@@ -1,0 +1,90 @@
+@use 'styles/fonts';
+@use 'styles/icons';
+
+
+
+body {
+    font-family: 'Work Sans', sans-serif;
+    overflow-x: hidden;
+}
+
+
+
+
+.sb-topnav {
+    font-size: 13px;
+    line-height: 1.66em;
+    font-weight: 400;
+    color: #707070;
+}
+
+.sb-font-small {
+    font-size: 13px;
+}
+
+.sb-brand {
+    font-size: 35px;
+    margin: 0;
+    padding: 0;
+    line-height: 1.1;
+}
+
+.sb-brand-secondary {
+    color: #8b8b8b;
+    font-size: 12px;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+
+.sb-topnav,
+nav.navbar {
+    z-index: 1050; // Ensure navbar is above the carousel
+    position: relative;
+}
+
+
+.sb-bg-primary {
+    background-color: #ceccc0 !important;
+}
+
+.sb-navbar-brand {
+    max-height: 100px;
+}
+
+.sb-btn-black {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+    border-radius: 0;
+    padding: 0.75rem 2rem;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sb-btn-black:hover {
+    background-color: #333;
+    border-color: #333;
+}
+
+.sb-btn-white {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #fff;
+    border-radius: 0;
+    padding: 0.75rem 2rem;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sb-btn-white:hover {
+    background-color: #f2f2f2;
+    border-color: #f2f2f2;
+}
