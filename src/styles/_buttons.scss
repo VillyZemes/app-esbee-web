@@ -1,0 +1,123 @@
+@use 'variables' as *;
+@use 'sass:color';
+
+.btn {
+    border: 1px solid #fff;
+    border-radius: 0;
+    padding: 0.75rem 2rem !important;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sb-btn-black {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+    border-radius: 0;
+    padding: 0.75rem 2rem;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sb-btn-black:hover {
+    background-color: #333;
+    border-color: #333;
+}
+
+.sb-btn-white {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #fff;
+    border-radius: 0;
+    padding: 0.75rem 2rem;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sb-btn-white:hover {
+    background-color: #f2f2f2;
+    border-color: #f2f2f2;
+}
+
+
+// Button accent styles
+.btn-accent {
+    color: #fff;
+    background-color: $color_accent;
+    border-color: $color_accent;
+
+    &:hover {
+        color: #fff;
+        background-color: color.adjust($color_accent, $lightness: -7.5%);
+        border-color: color.adjust($color_accent, $lightness: -10%);
+    }
+
+    &:focus,
+    &.focus {
+        color: #fff;
+        background-color: color.adjust($color_accent, $lightness: -7.5%);
+        border-color: color.adjust($color_accent, $lightness: -10%);
+        box-shadow: 0 0 0 0.25rem rgba(color.mix(#fff, $color_accent, 15%), 0.5);
+    }
+
+    &:active,
+    &.active,
+    .show>&.dropdown-toggle {
+        color: #fff;
+        background-color: color.adjust($color_accent, $lightness: -10%);
+        border-color: color.adjust($color_accent, $lightness: -12.5%);
+
+        &:focus {
+            box-shadow: 0 0 0 0.25rem rgba(color.mix(#fff, $color_accent, 15%), 0.5);
+        }
+    }
+
+    &:disabled,
+    &.disabled {
+        color: #fff;
+        background-color: $color_accent;
+        border-color: $color_accent;
+        opacity: 0.65;
+    }
+}
+
+// Outline button accent styles
+.btn-outline-accent {
+    color: $color_accent;
+    border-color: $color_accent;
+
+    &:hover {
+        color: #fff;
+        background-color: $color_accent;
+        border-color: $color_accent;
+    }
+
+    &:focus,
+    &.focus {
+        box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.5);
+    }
+
+    &:active,
+    &.active,
+    .show>&.dropdown-toggle {
+        color: #fff;
+        background-color: $color_accent;
+        border-color: $color_accent;
+
+        &:focus {
+            box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.5);
+        }
+    }
+
+    &:disabled,
+    &.disabled {
+        color: $color_accent;
+        background-color: transparent;
+        opacity: 0.65;
+    }
+}

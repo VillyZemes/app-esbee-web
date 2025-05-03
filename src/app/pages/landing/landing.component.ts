@@ -1,57 +1,43 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewInit } from '@angular/core';
+import { PricePipe } from '../../pipes/price.pipe';
 
 @Component({
   selector: 'sb-landing',
-  imports: [CommonModule],
+  imports: [CommonModule, PricePipe],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })
-export class LandingComponent {
+export class LandingComponent implements OnInit, AfterViewInit {
   products = [
-    { id: 1, name: 'Product 1', description: 'Short description of Product 1.', price: 19.99, image: 'images/p1.png' },
-    { id: 2, name: 'Product 2', description: 'Short description of Product 2.', price: 29.99, image: 'images/p2.png' },
-    { id: 3, name: 'Product 3', description: 'Short description of Product 3.', price: 39.99, image: 'images/p3.jpg' },
-    { id: 4, name: 'Product 4', description: 'Short description of Product 4.', price: 49.99, image: 'images/p4.jpg' },
-    { id: 5, name: 'Product 5', description: 'Short description of Product 5.', price: 59.99, image: 'images/p3.jpg' },
-    { id: 6, name: 'Product 6', description: 'Short description of Product 6.', price: 69.99, image: 'images/p1.png' },
-    { id: 7, name: 'Product 7', description: 'Short description of Product 7.', price: 79.99, image: 'images/p4.jpg' }
+    { id: 1, name: 'Jablko & Škorica', description: 'S vôňou jablka a škorice navodíte do vášho domova pocit pohody a čistoty', price: 14.90, image: 'images/DSC00125.jpg' },
+    { id: 2, name: 'Coconut', description: 'Vôňa kokosu vnesie do vášho domova sviežu, exotickú atmosféru', price: 14.90, image: 'images/DSC00088.jpg' },
+    { id: 3, name: 'Kvetinová záhrada', description: 'Kvetinová vôňa inšpirovaná rozkvitnutou záhradou prináša do priestoru sviežosť, jemnosť a pocit jari po celý rok', price: 14.90, image: 'images/DSC00093.jpg' },
+    { id: 4, name: 'Vanilla', description: 'Jemne sladká vanilka zahalí váš domov do krémovej hebkosti', price: 14.90, image: 'images/DSC00052.jpg' },
+    { id: 5, name: 'Ice tea', description: 'Príjemná vôňa ľadového čaju pôsobí sviežo a uvoľňujúco', price: 14.90, image: 'images/DSC00008.jpg' },
   ];
 
-  productChunks: any[][] = [];
-  currentSlideIndex = 0;
-  productsPerSlide = 4; // Default for large screens
-
   constructor() {
-    this.updateProductsPerSlide();
-    this.chunkProducts();
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(): void {
-    this.updateProductsPerSlide();
-    this.chunkProducts();
+  ngOnInit(): void {
+    // Set CSS variable for accurate viewport height
+    this.setViewportHeight();
+
+    // Update viewport height on resize
+    window.addEventListener('resize', () => {
+      this.setViewportHeight();
+    });
   }
 
-  updateProductsPerSlide(): void {
-    const width = window.innerWidth;
-    if (width >= 992) {
-      this.productsPerSlide = 4; // Large screens (lg and above)
-    } else if (width >= 768) {
-      this.productsPerSlide = 2; // Medium screens (md)
-    } else {
-      this.productsPerSlide = 1; // Small screens (sm and below)
-    }
+  ngAfterViewInit(): void {
   }
 
-  chunkProducts(): void {
-    this.productChunks = [];
-    for (let i = 0; i < this.products.length; i += this.productsPerSlide) {
-      this.productChunks.push(this.products.slice(i, i + this.productsPerSlide));
-    }
-  }
-
-  get totalSlides(): number {
-    return Math.ceil(this.products.length / this.productsPerSlide);
+  // Fix for mobile browsers viewport height
+  private setViewportHeight(): void {
+    // First we get the viewport height and we multiply it by 1% to get a value for a vh unit
+    const vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
   }
 }

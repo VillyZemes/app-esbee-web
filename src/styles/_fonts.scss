@@ -123,18 +123,38 @@
 .sb-ls-5 {
     letter-spacing: 5px;
 }
+
 .sb-ls-6 {
     letter-spacing: 6px;
 }
+
 .sb-ls-7 {
     letter-spacing: 7px;
 }
+
 .sb-ls-8 {
     letter-spacing: 8px;
 }
+
 .sb-ls-9 {
     letter-spacing: 9px;
 }
+
 .sb-ls-10 {
     letter-spacing: 10px;
+}
+
+// Text trimming utility
+.sb-text-trim-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// No-wrap text utility
+.sb-text-nowrap {
+    white-space: nowrap;
+    overflow: hidden;
 }
