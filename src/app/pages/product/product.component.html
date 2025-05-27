@@ -1,0 +1,143 @@
+@if (product) {
+<div class="container container-top product-detail-container">
+    <div class="row">
+        <!-- Image Section -->
+        <div class="col-lg-7 mb-5">
+            <div class="sticky-wrapper">
+                <div class="product-images">
+                    <img [src]="currentMainImage || getPrimaryImage()" class="img-fluid main-image mb-3"
+                        [alt]="product?.name" loading="eager">
+                    <div class="thumbnail-container d-flex gap-2 flex-wrap">
+                        @for (image of product?.images; track image.id) {
+                        <img [src]="image.image_path" class="img-thumbnail cursor-pointer" [alt]="image.alt_text"
+                            [class.active]="(currentMainImage || getPrimaryImage()) === image.image_path"
+                            (click)="changeMainImage(image.image_path)" loading="lazy">
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- add #about as template outlet -->
+            <div class="d-none d-lg-block">
+                <ng-container *ngTemplateOutlet="about"></ng-container>
+            </div>
+
+        </div>
+
+        <!-- Content Section -->
+        <div class="col-lg-5 d-flex flex-column gap-4 p-4">
+            <!-- Product Info -->
+            <div class="product-info">
+                <h1 class="text-uppercase fw-bold">{{ product?.name }}</h1>
+                <p>{{ subheader }}</p>
+
+                <!-- Hodnotenie Section -->
+                <sb-product-rating [overallRating]="product?.overall_rating || 0"
+                    [ratingsCount]="product?.ratings_count || 0" [sortedRatings]="product?.sorted_ratings || []">
+                </sb-product-rating>
+
+                <!-- <p class="mt-3">{{ product?.description }}</p> -->
+                <p class="mt-3" [innerHTML]="product?.long_description"></p>
+                <p class="mt-3 fst-italic">{{ getReplacementInterval() }}</p>
+
+                <hr class="mt-4">
+
+                <p class="text-muted text-decoration-line-through fw-bold fs-5 mb-1">{{ product?.original_price |
+                    sbPrice }}</p>
+                <p class="fw-bold fs-2 price">{{ product?.price | sbPrice }}</p>
+
+                <ul class="p-3 small bg-cc-secondary cc-border">
+                    @for (feature of product?.features; track $index) {
+                    <li class="cc-flex-center my-2">
+                        <span class="material-symbols-outlined text-success me-2">check</span>
+                        {{ feature }}
+                    </li>
+                    }
+                </ul>
+
+
+
+                @if (addToCartForm) {
+                <form [formGroup]="addToCartForm" (ngSubmit)="addToCart()">
+                    <div>
+                        <p class="fs-5"><span class="fw-bold">Farba modulu | </span> {{ selectedVariant?.color ===
+                            'black' ?
+                            'Čierna' : 'Biela' }}</p>
+                        <div class="d-flex gap-2">
+                            @for (variant of product?.variants; track variant.id) {
+                            <div class="color-box-wrapper cc-flex-center-center cursor-pointer"
+                                [class.active]="isSelectedVariant(variant)" (click)="selectVariant(variant)">
+                                <div class="color-box" [ngClass]="'color-box-' + variant.color"></div>
+                            </div>
+                            }
+                        </div>
+                        <p class="text-warning cc-flex-center mt-3">
+                            <span class="material-symbols-outlined me-2">package_2</span>
+                            {{ getStockMessage() }}
+                        </p>
+
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="input-group item-count-wrapper d-flex align-items-center justify-content-between">
+                            <span class="material-symbols-outlined sb-icon-outlined sb-fs-22 ms-3 cursor-pointer"
+                                (click)="decrementCount()">remove</span>
+                            <input type="number" formControlName="itemCount"
+                                class="form-control text-center item-count-input" min="1" readonly>
+                            <span class="material-symbols-outlined sb-icon-outlined sb-fs-22 me-3 cursor-pointer"
+                                (click)="incrementCount()">add</span>
+
+                        </div>
+                        <button type="submit" class="btn btn-accent sb-fs-13 d-flex align-items-center gap-2 justify-content-center">
+                            <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">shopping_cart</span>
+                            do košíka
+                        </button>
+                    </div>
+
+                </form>
+                }
+
+                <div class="d-block d-lg-none">
+                    <hr class="my-5">
+                    <ng-container *ngTemplateOutlet="about"></ng-container>
+                </div>
+
+                <!-- Why Choose eSBee -->
+                <!-- <div class="why-choose">
+                    <h5 class="text-uppercase sb-ls-6">Prečo si vybrať eSBee?</h5>
+                    <ul class="mt-3">
+                        <li>Praktický doplnok do klimatizácie, ktorý premení domov na miesto sviežosti, pohody a
+                            čistoty.
+                        </li>
+                        <li>Jednoduchá montáž, ktorú zvládne každý, bez nutnosti rozoberania klimatizácie.</li>
+                        <li>Silná a dlhotrvajúca vôňa, ktorá rozvonia každý priestor.</li>
+                        <li>Elegantný a prémiový dizajn.</li>
+                        <li>Obsahuje aktívne uhlie.</li>
+                    </ul>
+                </div> -->
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #about>
+    <!-- About eSBee -->
+    <sb-section-esbee-about></sb-section-esbee-about>
+
+    <!-- Installation -->
+    <div class="installation bg-cc-blue cc-border p-3 mt-3">
+        <h6 class="text-uppercase sb-ls-6 cc-text-444 fw-bold">Jednoduchá montáž</h6>
+        <ol class="mt-3 cc-text-444 small">
+            @for (instruction of product?.installation_instructions; track $index) {
+            <li>{{ instruction }}</li>
+            }
+        </ol>
+    </div>
+
+    <!-- Special Offers -->
+    <sb-section-special-offers></sb-section-special-offers>
+
+</ng-template>
+}

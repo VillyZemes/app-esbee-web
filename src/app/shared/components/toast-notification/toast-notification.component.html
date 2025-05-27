@@ -1,0 +1,25 @@
+<div *ngIf="allMessages?.length" class="toast-container position-fixed bottom-0 end-0 p-3">
+  <!-- Show only the first (most recent) message -->
+  <div *ngIf="allMessages[0]" class="toast-item mb-3 p-3 rounded-3 shadow-lg d-flex align-items-center gap-3" [ngClass]="{
+        'toast-error': allMessages[0].type === 'error',
+        'toast-success': allMessages[0].type === 'success',
+        'toast-warning': allMessages[0].type === 'warning',
+        'toast-info': allMessages[0].type === 'info'
+       }" role="alert" aria-live="assertive" aria-atomic="true">
+
+    <!-- Icon -->
+    <div class="toast-icon">
+      <span class="material-symbols-outlined sb-icon-solid">{{ getIconByType(allMessages[0].type) }}</span>
+    </div>
+
+    <!-- Message content -->
+    <div class="toast-content flex-grow-1">
+      <div class="toast-message fw-medium">{{ allMessages[0].message }}</div>
+    </div>
+
+    <!-- Close button -->
+    <button type="button" class="btn-close-custom" (click)="removeMessage(allMessages[0])" aria-label="Zavrieť">
+      <span class="material-symbols-outlined sb-icon-outlined">close</span>
+    </button>
+  </div>
+</div>

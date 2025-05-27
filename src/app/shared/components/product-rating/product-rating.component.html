@@ -1,0 +1,23 @@
+<div class="rating-section d-flex flex-column gap-2 mt-3">
+    <div class="stars d-flex gap-1">
+        @for (star of getStarArray(); track $index) {
+        <span class="material-symbols-outlined sb-icon-solid text-warning" [class.sb-icon-outlined]="star === 'empty'"
+            [class.sb-icon-solid]="star === 'full' || star === 'half'">
+            {{ star === 'half' ? 'star_half' : 'star' }}
+        </span>
+        }
+    </div>
+    <p class="small text-muted mb-0">{{ overallRating || '0' }} z 5 ({{ ratingsCount || 0 }} hodnotení)</p>
+
+    @if (sortedRatings && sortedRatings.length > 0) {
+    <div class="bg-cc-secondary cc-border p-3">
+        <p class="text-muted fst-italic mb-0">
+            "{{ sortedRatings[0].message }}"
+            <span class="fw-bold">- {{ sortedRatings[0].user_name }}</span>
+            @if (sortedRatings[0].is_verified) {
+            <span class="material-symbols-outlined text-success ms-1" style="font-size: 16px;">verified</span>
+            }
+        </p>
+    </div>
+    }
+</div>

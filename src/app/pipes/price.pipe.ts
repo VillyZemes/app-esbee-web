@@ -20,6 +20,8 @@ export class PricePipe implements PipeTransform {
     }
 
     // Format with 2 decimal places and add euro sign
-    return numValue.toFixed(2) + '€';
+    let resultDot = numValue.toFixed(2) + '€';
+    let resultComma = resultDot.replace('.', ',');
+    return resultComma;
   }
 }

@@ -1,0 +1,237 @@
+<div class="container container-top contact-container">
+    <!-- Page Header -->
+    <div class="row my-3">
+        <div class="col-lg-12 text-center">
+            <h2 class="fw-bold text-uppercase sb-ls-6">Kontaktujte nás</h2>
+            <p class="text-muted">Sme tu pre vás. Neváhajte nás kontaktovať s akýmikoľvek otázkami alebo
+                požiadavkami.</p>
+        </div>
+    </div>
+
+    <!-- Contact Information and Form Section -->
+    <div class="row g-5 mb-5">
+        <!-- Contact Information -->
+        <div class="col-lg-5">
+            <div class="contact-card p-4 bg-white cc-border h-100 text-center text-lg-start">
+                <h4 class="fw-bold mb-4">Kontaktné údaje</h4>
+
+                <div class="contact-info">
+                    <div class="contact-item d-flex align-items-center mb-4">
+                        <div class="contact-icon me-3 d-flex align-items-center justify-content-center bg-cc-secondary">
+                            <span class="material-symbols-outlined">location_on</span>
+                        </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold">Adresa</h6>
+                            <p class="mb-0">Vysokoškolákov 8, 010 08 Žilina, Slovensko</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item d-flex align-items-center mb-4">
+                        <div class="contact-icon me-3 d-flex align-items-center justify-content-center bg-cc-secondary">
+                            <span class="material-symbols-outlined">phone</span>
+                        </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold">Telefón</h6>
+                            <p class="mb-0">+421 900 123 456</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item d-flex align-items-center mb-4">
+                        <div class="contact-icon me-3 d-flex align-items-center justify-content-center bg-cc-secondary">
+                            <span class="material-symbols-outlined">mail</span>
+                        </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold">Email</h6>
+                            <p class="mb-0"><a href="mailto:info@esbee.sk" class="text-accent">info&#64;esbee.sk</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item d-flex align-items-center mb-4">
+                        <div class="contact-icon me-3 d-flex align-items-center justify-content-center bg-cc-secondary">
+                            <span class="material-symbols-outlined">schedule</span>
+                        </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold">Otváracie hodiny</h6>
+                            <p class="mb-0">Pondelok - Piatok: 9:00 - 17:00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-media mt-5">
+                    <h6 class="fw-bold mb-3 text-center text-lg-start">Nájdete nás na</h6>
+                    <div class="d-flex justify-content-center justify-content-lg-start gap-3">
+                        <a href="#"
+                            class="social-icon d-flex align-items-center justify-content-center bg-social-facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#"
+                            class="social-icon d-flex align-items-center justify-content-center bg-social-instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            class="social-icon d-flex align-items-center justify-content-center bg-social-linkedin">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-lg-7">
+            <div class="contact-form-card p-4 bg-white cc-border h-100">
+                <h4 class="fw-bold mb-4">Napíšte nám</h4>
+                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="name" placeholder="Vaše meno"
+                                    formControlName="name">
+                                <label for="name">Vaše meno</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" placeholder="Váš email"
+                                    formControlName="email">
+                                <label for="email">Váš email</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="subject" placeholder="Predmet"
+                                    formControlName="subject">
+                                <label for="subject">Predmet</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="message" placeholder="Vaša správa"
+                                    style="height: 150px" formControlName="message"></textarea>
+                                <label for="message">Vaša správa</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="gdpr" formControlName="gdpr">
+                                <label class="form-check-label small" for="gdpr">
+                                    Súhlasím so spracovaním osobných údajov podľa GDPR. Prečítajte si naše <a href="#"
+                                        class="text-accent">zásady ochrany osobných údajov</a>.
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-accent d-flex align-items-center gap-2"
+                                [disabled]="!contactForm.valid">
+                                <span class="material-symbols-outlined">send</span>
+                                Odoslať správu
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Information Section -->
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <div class="company-info p-4 bg-white cc-border">
+                <h4 class="fw-bold mb-4">Firemné údaje</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><strong>Obchodné meno:</strong> eSBee s.r.o.</li>
+                            <li class="mb-2"><strong>IČO:</strong> 12345678</li>
+                            <li class="mb-2"><strong>DIČ:</strong> 2023456789</li>
+                            <li class="mb-2"><strong>IČ DPH:</strong> SK2023456789</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><strong>Banka:</strong> Slovenská sporiteľňa, a.s.</li>
+                            <li class="mb-2"><strong>IBAN:</strong> SK12 0900 0000 0000 1234 5678</li>
+                            <li class="mb-2"><strong>SWIFT:</strong> GIBASKBX</li>
+                            <li class="mb-2"><strong>Zapísaná:</strong> v Obchodnom registri Okresného súdu Žilina,
+                                oddiel: Sro, vložka č. 12345/L</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <div class="map-container cc-border">
+                <h4 class="fw-bold mb-4">Kde nás nájdete</h4>
+                <div class="map-wrapper">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606.9340132114657!2d18.7493793!3d49.211722099999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4714f66b79159179%3A0x84a4a93c912cbc44!2sVysoko%C5%A1kol%C3%A1kov%208%2C%20010%2008%20%C5%BDilina!5e0!3m2!1sen!2ssk!4v1653654321098!5m2!1sen!2ssk"
+                        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <div class="faq-container p-4 bg-white cc-border">
+                <h4 class="fw-bold mb-4">Najčastejšie otázky</h4>
+
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item cc-border mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                                Ako môžem zaplatiť za objednávku?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Ponúkame viaceré platobné možnosti vrátane platby kartou, bankovým prevodom, alebo
+                                dobierkou pri doručení.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item cc-border mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                                Ako dlho trvá dodanie?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Štandardná dodacia doba je 2-3 pracovné dni od prijatia platby. Pri expresnom doručení
+                                môžete očakávať zásielku už nasledujúci pracovný deň.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item cc-border">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                                Ako dlho vydrží vôňa v klimatizácii?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Naše vône do klimatizácie majú priemernú životnosť 4-6 týždňov pri bežnom používaní.
+                                Intenzita vône závisí od frekvencie používania klimatizácie.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

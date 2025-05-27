@@ -1,23 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit, AfterViewInit } from '@angular/core';
-import { PricePipe } from '../../pipes/price.pipe';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AboutComponent } from "../about/about.component";
+import { ShopComponent } from "../shop/shop.component";
 
 @Component({
   selector: 'sb-landing',
-  imports: [CommonModule, PricePipe],
+  imports: [CommonModule, AboutComponent, ShopComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })
 export class LandingComponent implements OnInit, AfterViewInit {
-  products = [
-    { id: 1, name: 'Jablko & Škorica', description: 'S vôňou jablka a škorice navodíte do vášho domova pocit pohody a čistoty', price: 14.90, image: 'images/DSC00125.jpg' },
-    { id: 2, name: 'Coconut', description: 'Vôňa kokosu vnesie do vášho domova sviežu, exotickú atmosféru', price: 14.90, image: 'images/DSC00088.jpg' },
-    { id: 3, name: 'Kvetinová záhrada', description: 'Kvetinová vôňa inšpirovaná rozkvitnutou záhradou prináša do priestoru sviežosť, jemnosť a pocit jari po celý rok', price: 14.90, image: 'images/DSC00093.jpg' },
-    { id: 4, name: 'Vanilla', description: 'Jemne sladká vanilka zahalí váš domov do krémovej hebkosti', price: 14.90, image: 'images/DSC00052.jpg' },
-    { id: 5, name: 'Ice tea', description: 'Príjemná vôňa ľadového čaju pôsobí sviežo a uvoľňujúco', price: 14.90, image: 'images/DSC00008.jpg' },
-  ];
 
-  constructor() {
+  constructor(
+
+  ) {
   }
 
   ngOnInit(): void {
@@ -32,6 +28,9 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
   }
+
+  
+
 
   // Fix for mobile browsers viewport height
   private setViewportHeight(): void {

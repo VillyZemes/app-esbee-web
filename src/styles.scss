@@ -8,8 +8,13 @@
 
 
 body {
-    font-family: 'Work Sans', sans-serif;
+    font-family: 'Hanken Grotesk', sans-serif;
     overflow-x: hidden;
+}
+
+/* Enable smooth scrolling for the entire app */
+html {
+    scroll-behavior: smooth;
 }
 
 /* Hide scrollbars while maintaining scroll functionality for containers */
@@ -44,23 +49,6 @@ body {
     font-size: 13px;
 }
 
-.sb-brand {
-    font-size: 35px;
-    margin: 0;
-    padding: 0;
-    line-height: 1.1;
-}
-
-.sb-brand-secondary {
-    color: #8b8b8b;
-    font-size: 12px;
-    line-height: 1.2;
-    margin: 0;
-    padding: 0;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
 
 .sb-topnav,
 nav.navbar {
@@ -77,3 +65,131 @@ nav.navbar {
     max-height: 100px;
 }
 
+
+.bg-box-gray {
+    background-color: #F5F5F5;
+}
+
+
+.cc-flex-center {
+    display: flex;
+    align-items: center;
+}
+
+.cc-flex-center-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cc-flex-start {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.bg-cc-secondary {
+    background-color: #F5F5F5;
+}
+
+.bg-cc-yellow {
+    background-color: #F9F5E9FF;
+}
+
+.bg-cc-red {
+    background-color: #F7F1F4FF;
+}
+
+.bg-cc-blue {
+    background-color: #EEF3F6;
+}
+
+.cc-border {
+    border: 1px solid #E2E2E2FF;
+}
+
+.cc-text-444 {
+    color: #444;
+}
+
+.container-top {
+    margin-top: 125px;
+    padding-top: 1rem;
+}
+
+/* Fix for FontAwesome icons in links */
+a .fa,
+a .fas,
+a .far,
+a .fab,
+a .fal,
+a i[class^="fa-"] {
+    text-decoration: none !important;
+    border: none !important;
+    outline: none !important;
+}
+
+/* Social Media Brand Colors */
+.bg-social-facebook {
+    background-color: rgba(59, 89, 152, 0.1) !important;
+    color: #3b5998 !important;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: rgba(59, 89, 152, 0.2) !important;
+    }
+
+    i {
+        color: #3b5998 !important;
+    }
+}
+
+.bg-social-instagram {
+    background: rgba(225, 48, 108, 0.1) !important;
+    color: #e1306c !important;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: rgba(225, 48, 108, 0.2) !important;
+    }
+
+    i {
+        color: #e1306c !important;
+    }
+}
+
+.bg-social-linkedin {
+    background-color: rgba(0, 119, 181, 0.1) !important;
+    color: #0077b5 !important;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: rgba(0, 119, 181, 0.2) !important;
+    }
+
+    i {
+        color: #0077b5 !important;
+    }
+}
+
+.social-icon {
+    text-decoration: none !important;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+
+    i {
+        font-size: 18px;
+        border: none !important;
+        text-decoration: none !important;
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+}

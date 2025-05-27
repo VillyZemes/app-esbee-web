@@ -1,39 +1,38 @@
-<div class="position-absolute top-0 w-100">
+<div class="position-absolute top-0 w-100 navbar-block" [ngClass]="{'navbar-hidden': isNavbarHidden}">
     <div class="sb-topnav bg-black text-white d-flex justify-content-between px-4 py-2 py-0">
         <div class="flex-fill text-start d-none d-lg-block">doplnit&#64;test.com</div>
-        <div class="flex-fill text-center">Receive 10% off & free shipping on orders over $50 doplnit</div>
+        @if (freeShippingThreshold) {
+        <div class="flex-fill text-center">Bezplatná doprava nad {{ freeShippingThreshold | sbPrice }}</div>
+        }
         <div class="flex-fill text-end d-none d-lg-block">Placeholder doplnit</div>
     </div>
 
-    <nav class="navbar navbar-expand-lg bg-white border-bottom d-none d-lg-block">
-        <div class="container-fluid d-flex align-items-center container">
+    <nav class="navbar navbar-expand-lg bg-white border-bottom d-none d-lg-flex">
+        <div class="cc-flex-center container d-flex align-items-center">
 
-            <div class="text-center py-3 me-3 flex-shrink-0">
-                <a class="navbar-brand fw-bold sb-brand p-0 m-0 d-inline-block sb-ls-4" href="#">
-                    <span class="d-block text-accent">eSBee</span>
-                    <span class="sb-brand-secondary d-block sb-ls-3">vône do klimatizácie</span>
-                    <span class="sb-brand-secondary d-block sb-ls-3">est. 2025</span>
-                </a>
-            </div>
+            <a class="navbar-brand" routerLink="domov">
+                <img src="logo/logo.png" alt="Logo" class="img-fluid">
+            </a>
 
-            <div class="d-flex gap-3 text-uppercase sb-ls-1 flex-grow-1 justify-content-center">
-                <a class="nav-link sb-font-small px-2 sb-fw-500 sb-text-nowrap" href="#">O nás</a>
-                <a class="nav-link sb-font-small px-2 sb-text-nowrap" href="#">Obchod</a>
-                <a class="nav-link sb-font-small px-2 sb-text-nowrap" href="#">Vôňe do klimatizácie</a>
-                <a class="nav-link sb-font-small px-2 sb-text-nowrap" href="#">Kontakt</a>
+            <div class="d-flex gap-3 text-uppercase sb-ls-1 flex-grow-1 justify-content-center align-items-center">
+                @for (link of navlinks; track $index) {
+                <a class="nav-link sb-font-small px-2 sb-text-nowrap" [routerLink]="link.link"
+                    routerLinkActive="active">{{ link.name }}</a>
+
+                }
             </div>
 
             <div class="d-flex justify-content-end align-items-center gap-3 flex-shrink-0 ms-3">
-                <a class="nav-link d-flex align-items-center gap-4" href="#">
-                    <span class="d-flex align-items-center gap-1">
+                <div class="nav-link d-flex align-items-center gap-4">
+                    <a class="d-flex align-items-center gap-1 text-decoration-none text-dark" routerLink="/kosik">
                         <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">shopping_cart</span>
-                        <span class="sb-fs-14">( 0 )</span>
-                    </span>
+                        <span class="sb-fs-14">( {{ cartItemsCount$ | async }} )</span>
+                    </a>
                     <span class="d-flex align-items-center gap-1">
                         <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">favorite</span>
                         <span class="sb-fs-14">( 0 )</span>
                     </span>
-                </a>
+                </div>
                 <a class="nav-link d-flex align-items-center" href="#">
                     <i class="bi bi-person"></i>
                 </a>
@@ -42,42 +41,37 @@
         </div>
     </nav>
 
-    <nav class="navbar navbar-expand-lg bg-white border-bottom d-block d-lg-none">
-        <div class="container-fluid d-flex align-items-center container">
-
-            <div class="text-center py-3" style="width: 24%;">
-                <a class="navbar-brand fw-bold sb-brand p-0 m-0 d-inline-block sb-ls-4" href="#">
-                    <span class="d-block text-accent">eSBee</span>
-                    <!-- <span class="sb-brand-secondary d-block sb-ls-3">vône do klimatizácie</span>
-                    <span class="sb-brand-secondary d-block sb-ls-3">est. 2025</span> -->
-                </a>
-            </div>
+    <nav class="navbar navbar-expand-lg bg-white border-bottom d-flex d-lg-none">
+        <div class="container-fluid d-flex align-items-center">
+            <a class="navbar-brand" routerLink="domov">
+                <img src="logo/logo.png" alt="Logo" class="img-fluid">
+            </a>
 
             <div class="d-flex justify-content-end align-items-center gap-3" style="width: 38%;">
-                <a class="nav-link d-flex align-items-center gap-4" href="#">
-                    <span class="d-flex align-items-center gap-1">
+                <div class="nav-link d-flex align-items-center gap-4">
+                    <a class="d-flex align-items-center gap-1 text-decoration-none text-dark" routerLink="/kosik">
                         <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">shopping_cart</span>
-                        <span class="sb-fs-14">( 0 )</span>
-                    </span>
-                </a>
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                        <span class="sb-fs-14">( {{ cartItemsCount$ | async }} )</span>
+                    </a>
+                </div>
+                <button class="navbar-toggler border-0" type="button" (click)="toggleMobileMenu()"
+                    aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">menu</span>
                 </button>
             </div>
+        </div>
 
-            <div class="collapse navbar-collapse" id="mobileMenu">
-                <div class="d-flex flex-column gap-3 mt-3">
-                    <a class="nav-link sb-font-small px-2 sb-fw-500" href="#">O nás</a>
-                    <a class="nav-link sb-font-small px-2" href="#">Obchod</a>
-                    <a class="nav-link sb-font-small px-2" href="#">Vôňe do klimatizácie</a>
-                    <a class="nav-link sb-font-small px-2" href="#">Kontakt</a>
-                    <span class="d-flex align-items-center gap-1">
-                        <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">favorite</span>
-                        <span class="sb-fs-14">( 0 )</span>
-                    </span>
-                </div>
+        <div class="mobile-dropdown" [ngClass]="{'mobile-dropdown-open': isMobileMenuOpen}">
+            <div class="d-flex flex-column gap-3 p-3">
+                @for (link of navlinks; track $index) {
+                <a class="nav-link sb-font-small px-2 sb-text-nowrap" [routerLink]="link.link"
+                    routerLinkActive="active">{{ link.name }}</a>
+
+                }
+                <span class="d-flex align-items-center gap-1">
+                    <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">favorite</span>
+                    <span class="sb-fs-14">( 0 )</span>
+                </span>
             </div>
         </div>
     </nav>

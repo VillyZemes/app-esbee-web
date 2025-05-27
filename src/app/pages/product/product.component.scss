@@ -1,0 +1,159 @@
+@use '../../../styles/variables' as *;
+
+.product-detail-container {
+
+    .image-container {
+        position: relative;
+        // This height will be set dynamically by Angular
+    }
+
+    .product-images {
+        // Basic styling
+        background: #fff;
+
+        .main-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            //border-radius: 8px;
+            //box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+
+            img {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                padding: 0;
+                border-radius: 0;
+                //border-radius: 4px;
+                border: 0;
+                cursor: pointer;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+                &:hover {
+                    transform: scale(1.1);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+
+                &.active {
+                    border: 2px solid $color_accent; // Highlight active thumbnail
+                    //box-shadow: 0 4px 8px $color_accent;
+                }
+            }
+
+
+        }
+    }
+
+    .rating-section {
+        h2 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        p {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .stars {
+            .material-symbols-outlined {
+                font-size: 28px;
+
+                &.text-warning {
+                    color: #ffc107; // Yellow for active stars
+                }
+
+                &.text-secondary {
+                    color: #e0e0e0; // Gray for inactive stars
+                }
+            }
+        }
+    }
+}
+
+.price {
+    font-weight: 900 !important;
+    color: #000; // Ensure the new price stands out
+}
+
+.text-decoration-line-through {
+    color: #6c757d; // Muted color for the old price
+}
+
+.color-box-wrapper {
+
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    .color-box {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .color-box-black {
+        background-color: #000;
+    }
+
+    .color-box-white {
+        background-color: #fff;
+        border: 1px solid #9E9E9E4D;
+    }
+
+    &.active {
+        border: 1px solid #000;
+    }
+
+}
+
+.input-group {
+    button {
+        height: 100%; // Match the height of the input
+    }
+
+    input {
+        height: 100%; // Match the height of the buttons
+        max-width: 60px;
+    }
+}
+
+.input-group.item-count-wrapper {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 130px;
+    height: 48px;
+
+    .item-count-input {
+        border: none;
+        width: 50px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center; // Horizontally center text
+        display: flex; // Use flexbox for vertical centering
+        align-items: center; // Vertically center text
+        justify-content: center; // Ensure proper alignment
+        padding: 0; // Remove padding for proper alignment
+        height: 100%; // Match the height of the wrapper
+        appearance: textfield; // Remove spinner in some browsers
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+            -webkit-appearance: none; // Remove spinner in WebKit browsers
+            margin: 0;
+        }
+    }
+
+
+}

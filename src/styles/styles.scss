@@ -1,0 +1,9 @@
+// Add padding to main content area to account for fixed navbar
+body {
+    padding-top: 125px; // Height of navbar + topnav
+}
+
+// For container-top class elements to align properly
+.container-top {
+    margin-top: 0;
+}

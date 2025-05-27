@@ -1,0 +1,111 @@
+.contact-container {
+    padding-bottom: 3rem;
+
+    h1,
+    h2,
+    h3 {
+        color: #333;
+    }
+}
+
+.contact-card,
+.contact-form-card,
+.company-info,
+.faq-container {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    .material-symbols-outlined {
+        font-size: 24px;
+        color: #444;
+    }
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+
+    i {
+        font-size: 20px;
+        color: #444;
+    }
+}
+
+.form-floating {
+    margin-bottom: 20px;
+
+    input,
+    textarea {
+        border-radius: 6px;
+        border: 1px solid #e2e2e2;
+
+        &:focus {
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-accent-rgb), 0.25);
+            border-color: var(--bs-accent);
+        }
+    }
+}
+
+.map-container {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+
+    .map-wrapper {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+}
+
+.accordion-button {
+    background-color: white;
+    color: #333;
+    font-weight: 500;
+
+    &:not(.collapsed) {
+        background-color: var(--bs-accent-light);
+        color: var(--bs-accent);
+    }
+
+    &:focus {
+        box-shadow: none;
+        border-color: #e2e2e2;
+    }
+}
+
+.accordion-item {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+@media (max-width: 767.98px) {
+    .contact-item {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .contact-icon {
+            margin-bottom: 1rem;
+            margin-right: 0;
+        }
+    }
+}

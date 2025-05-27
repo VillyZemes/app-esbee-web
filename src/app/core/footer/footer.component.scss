@@ -34,3 +34,22 @@ input[type="email"] {
     margin: 0 auto;
     text-align: center;
 }
+
+.btn {
+    height: 37px !important;
+    padding: 0rem 2rem !important;
+}
+
+.input-mail {
+    max-width: 100%; // Default for smaller screens
+
+    @media (min-width: 992px) {
+        // Bootstrap's lg breakpoint
+        max-width: 50%;
+    }
+}
+
+.navbar-brand img {
+    max-height: 60px;
+    width: auto;
+}
