@@ -12,6 +12,7 @@ import { Observable, forkJoin, map } from 'rxjs';
 import { UtilsService } from '../../shared/services/utils.service';
 import { SettingsService } from '../../services/settings.service';
 import { SettingsModel } from '../../shared/models/SettingsModel';
+import { PacketaComponent } from '../../shared/packeta/packeta.component';
 
 interface CartItemWithDetails extends CartModel {
   product?: Product;
@@ -21,7 +22,7 @@ interface CartItemWithDetails extends CartModel {
 
 @Component({
   selector: 'sb-cart',
-  imports: [CommonModule, RouterLink, PricePipe],
+  imports: [CommonModule, RouterLink, PricePipe, PacketaComponent],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })

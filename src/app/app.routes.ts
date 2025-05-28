@@ -6,6 +6,7 @@ import { AboutComponent } from './pages/about/about.component';
 import { ShopComponent } from './pages/shop/shop.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { CartComponent } from './pages/cart/cart.component';
+import { TestComponent } from './pages/test/test.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'o-nas', component: AboutComponent },
   { path: 'obchod', component: ShopComponent },
   { path: 'kosik', component: CartComponent },
+  { path: 'test', component: TestComponent },
   { path: 'kontakt', component: ContactComponent },
   { path: 'produkt/:id', component: ProductComponent },
   { path: '**', component: NotFoundComponent }

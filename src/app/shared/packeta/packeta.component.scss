@@ -1,0 +1,23 @@
+@use '../../../styles/variables' as *;
+
+.border-primary {
+  border-color: $color_accent !important;
+}
+
+.bg-light {
+  background-color: rgba($color_accent, 0.1) !important;
+}
+
+.form-check-input:checked {
+  background-color: $color_accent !important;
+  border-color: $color_accent !important;
+}
+
+.form-check-input:focus {
+  border-color: $color_accent !important;
+  box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.25) !important;
+}
+
+.form-check-input:checked:focus {
+  box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.25) !important;
+}
