@@ -12,116 +12,42 @@
                 <!-- Mobile-First Progress Stepper -->
                 <div class="mobile-stepper mb-4">
                     <!-- Progress Header -->
-                    <sb-progress-header [currentStep]="currentStep" [totalSteps]="3"
+                    <sb-progress-header [currentStep]="currentStep" [totalSteps]="totalSteps"
                         stepText="Krok"></sb-progress-header>
 
                     <!-- Step Cards -->
                     <div class="step-cards">
-                        <!-- Step 1: Cart Items -->
-                        <div class="step-card mb-3" [class.active]="currentStep === 1"
-                            [class.completed]="currentStep > 1">
-                            <div class="step-card-header" (click)="currentStep > 1 ? setCurrentStep(1) : null">
-                                <div class="d-flex align-items-center">
-                                    <div class="step-number">
-                                        @if (currentStep > 1) {
-                                        <i class="fas fa-check"></i>
-                                        } @else {
-                                        <span>1</span>
-                                        }
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <h6 class="mb-0 fw-bold">Produkty v košíku</h6>
-                                        <small class="text-dark" [class.d-none]="currentStep === 1">{{ productsCount }}
-                                            položiek • {{ cartTotals.totalPrice | sbPrice }}</small>
-                                    </div>
-                                    <i class="fas fa-pencil-alt text-dark" [class.d-none]="currentStep <= 1"></i>
-                                </div>
-                            </div>
+                        @for (config of stepConfigs; track config.id) {
+                        <sb-step-card [config]="getConfigWithSubtitle(config)" [currentStep]="currentStep"
+                            [nextButtonDisabled]="isNextButtonDisabled(config.step)"
+                            (stepClicked)="setCurrentStep($event)" (nextClicked)="goToNextStep(config.step)"
+                            (backClicked)="goToPrevStep(config.step)">
 
-                            <div class="step-card-body" [class.d-none]="currentStep !== 1">
-                                <sb-cart-products (cartTotalsChanged)="onCartTotalChanged($event)"></sb-cart-products>
-
-                                <div class="step-actions px-3 pb-3 text-end">
-                                    <button class="btn btn-accent" (click)="setCurrentStep(2)">
-                                        Pokračovať
-                                        <i class="fas fa-arrow-right ms-2"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 2: Delivery -->
-                        <div class="step-card mb-3" [class.active]="currentStep === 2"
-                            [class.completed]="currentStep > 2" [class.disabled]="currentStep < 2">
-                            <div class="step-card-header" (click)="currentStep > 2 ? setCurrentStep(2) : null">
-                                <div class="d-flex align-items-center">
-                                    <div class="step-number">
-                                        @if (currentStep > 2) {
-                                        <i class="fas fa-check"></i>
-                                        } @else {
-                                        <span>2</span>
-                                        }
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <h6 class="mb-0 fw-bold">Doprava</h6>
-                                        <small class="text-dark" [class.d-none]="currentStep === 2">
-                                            @if (currentStep < 2) { Najprv dokončite výber produktov } @else if
-                                                (currentStep> 2) {
-                                                {{ getDeliveryTypeName() }}
-                                                }
-                                        </small>
-                                    </div>
-                                    <i class="fas fa-pencil-alt text-dark" [class.d-none]="currentStep <= 2"></i>
-                                </div>
-                            </div>
-
-                            <div class="step-card-body p-3" [class.d-none]="currentStep !== 2">
-                                <p class="text-muted small mb-3">Vyberte si spôsob doručenia</p>
-                                <sb-packeta (pickupPointSelected)="onPickupPointSelected($event)"
-                                    (addressSelected)="onAddressSelected($event)"
-                                    (deliveryTypeChanged)="onDeliveryTypeChanged($event)"></sb-packeta>
-
-                                <div class="step-actions mt-4">
-                                    <div class="row g-2">
-                                        <div class="col-6">
-                                            <button class="btn btn-outline-secondary" (click)="setCurrentStep(1)">
-                                                <i class="fas fa-arrow-left me-2"></i>
-                                                Späť
-                                            </button>
-                                        </div>
-                                        <div class="col-6 text-end">
-                                            <button class="btn btn-accent" [disabled]="!isDeliverySelected()"
-                                                (click)="setCurrentStep(3)">
-                                                Pokračovať
-                                                <i class="fas fa-arrow-right ms-2"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 3: Summary -->
-                        <div class="step-card" [class.active]="currentStep === 3" [class.disabled]="currentStep < 3">
-                            <div class="step-card-header">
-                                <div class="d-flex align-items-center">
-                                    <div class="step-number">
-                                        <span>3</span>
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <h6 class="mb-0 fw-bold">Súhrn a dokončenie</h6>
-                                        <small class="text-dark" [class.d-none]="currentStep === 3">
-                                            @if (currentStep < 3) { Najprv dokončite výber dopravy } </small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="step-card-body" [class.d-none]="currentStep !== 3">
-                                <sb-cart-summary [cartTotals]="cartTotals" [productsCount]="productsCount"
-                                    [freeShippingThreshold]="freeShippingThreshold"
-                                    (backToDelivery)="setCurrentStep(2)"></sb-cart-summary>
-                            </div>
-                        </div>
+                            @switch (config.step) {
+                            @case (CART_STEPS.PRODUCTS) {
+                            <sb-cart-products (cartTotalsChanged)="onCartTotalChanged($event)"></sb-cart-products>
+                            }
+                            @case (CART_STEPS.DELIVERY) {
+                            <p class="text-muted small mb-3">Vyberte si spôsob doručenia</p>
+                            <sb-packeta (pickupPointSelected)="onPickupPointSelected($event)"
+                                (addressSelected)="onAddressSelected($event)"
+                                (deliveryTypeChanged)="onDeliveryTypeChanged($event)"></sb-packeta>
+                            }
+                            @case (CART_STEPS.PAYMENT) {
+                            <p class="text-muted small mb-3">Vyberte si spôsob platby</p>
+                            TODO
+                            }
+                            @case (CART_STEPS.FORM) {
+                            <sb-cart-finish-order></sb-cart-finish-order>
+                            }
+                            @case (CART_STEPS.SUMMARY) {
+                            <sb-cart-summary [cartTotals]="cartTotals" [productsCount]="productsCount"
+                                [freeShippingThreshold]="freeShippingThreshold"
+                                (backToDelivery)="setCurrentStep(CART_STEPS.FORM)"></sb-cart-summary>
+                            }
+                            }
+                        </sb-step-card>
+                        }
                     </div>
                 </div>
             </div>

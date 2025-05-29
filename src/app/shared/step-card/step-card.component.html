@@ -1,0 +1,53 @@
+<div class="step-card mb-3" 
+     [class.active]="isActive"
+     [class.completed]="isCompleted"
+     [class.disabled]="isDisabled">
+  
+  <div class="step-card-header" (click)="onStepHeaderClick()">
+    <div class="d-flex align-items-center">
+      <div class="step-number">
+        @if (isCompleted) {
+        <i class="fas fa-check"></i>
+        } @else {
+        <span>{{ config.step }}</span>
+        }
+      </div>
+      <div class="ms-3 flex-grow-1">
+        <h6 class="mb-0 fw-bold">{{ config.title }}</h6>
+        @if (config.subtitle && !isActive) {
+        <small class="text-dark">{{ config.subtitle }}</small>
+        }
+      </div>
+      @if (showEditIcon) {
+      <i class="fas fa-pencil-alt text-dark"></i>
+      }
+    </div>
+  </div>
+
+  <div class="step-card-body" [class.d-none]="!isActive">
+    <ng-content></ng-content>
+
+    @if (config.showActions) {
+    <div class="step-actions px-3 pb-3">
+      <div class="d-flex justify-content-between">
+        @if (config.showBackButton) {
+        <button class="btn btn-outline-secondary" (click)="onBackClick()">
+          <i class="fas fa-arrow-left me-2"></i>
+          Späť
+        </button>
+        }
+        
+        @if (config.nextStep) {
+        <button class="btn btn-accent" 
+                [class.ms-auto]="!config.showBackButton"
+                [disabled]="nextButtonDisabled"
+                (click)="onNextClick()">
+          Pokračovať
+          <i class="fas fa-arrow-right ms-2"></i>
+        </button>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</div>

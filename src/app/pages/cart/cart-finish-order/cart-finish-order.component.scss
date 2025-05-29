@@ -1,0 +1,127 @@
+@use '../../../../styles/variables' as *;
+@use 'sass:color';
+
+
+.order-form {
+    .card {
+        .card-header {
+            border-bottom: none;
+        }
+    }
+
+    .form-control,
+    .form-select {
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+
+        &:focus {
+            border-color: $color_accent;
+            box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.15);
+        }
+
+        &.form-control-lg,
+        &.form-select-lg {
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+    }
+
+    .form-check-input {
+        width: 1.25em;
+        height: 1.25em;
+        margin-top: 0.125em;
+        vertical-align: top;
+        border: 2px solid #dee2e6;
+
+        &:checked {
+            background-color: $color_accent;
+            border-color: $color_accent;
+        }
+
+        &:focus {
+            border-color: $color_accent;
+            box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.25);
+        }
+
+        &.is-invalid {
+            border-color: #dc3545;
+        }
+    }
+
+    .form-check {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+
+        .form-check-input {
+            margin-top: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        .form-check-label {
+            line-height: 1.5;
+        }
+    }
+
+    .form-label {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+        border: 1px solid #e9ecef;
+    }
+
+    .animate-in {
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .text-primary {
+        color: $color_accent !important;
+    }
+
+    .invalid-feedback {
+        display: none;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+
+        &.is-invalid~&,
+        .is-invalid~& {
+            display: block;
+        }
+    }
+
+    // Show invalid feedback when field is invalid
+    .form-check-input.is-invalid~.invalid-feedback {
+        display: block;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+    .order-form {
+        .card-body {
+            padding: 1.5rem !important;
+        }
+
+        .form-control-lg,
+        .form-select-lg {
+            padding: 0.625rem 0.875rem;
+            font-size: 0.95rem;
+        }
+    }
+}

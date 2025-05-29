@@ -23,7 +23,72 @@
   <script src="https://kit.fontawesome.com/6906bd30dc.js" crossorigin="anonymous"></script>
 
   <!-- Packeta Widget -->
-  <script src="https://widget.packeta.com/v6/www/js/library.js"></script>
+  <script>
+    // Load Packeta widget with better error handling
+    (function () {
+      let packetaLoaded = false;
+
+      function loadPacketa() {
+        if (packetaLoaded) {
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://widget.packeta.com/v6/www/js/library.js';
+        script.async = true;
+
+        script.onload = function () {
+          packetaLoaded = true;
+
+          // Override Packeta's close method to handle DOM errors
+          if (window.Packeta && window.Packeta.Widget) {
+            const originalClose = window.Packeta.Widget.close;
+            window.Packeta.Widget.close = function () {
+              // Trigger our custom callback for widget closure
+              if (window.packetaCloseCallback) {
+                window.packetaCloseCallback(null);
+              }
+
+              try {
+                // Remove all packeta elements safely
+                const elements = document.querySelectorAll('[id*="packeta"], .packeta-widget-overlay, .packeta-widget');
+                elements.forEach((el) => {
+                  try {
+                    if (el.parentNode) {
+                      el.parentNode.removeChild(el);
+                    }
+                  } catch (e) {
+                    // Ignore DOM errors
+                  }
+                });
+              } catch (error) {
+                // Fallback to original close if our method fails
+                try {
+                  originalClose.call(this);
+                } catch (e) {
+                  // Ignore all errors
+                }
+              }
+            };
+          }
+        };
+
+        script.onerror = function () {
+          setTimeout(() => {
+            loadPacketa();
+          }, 2000);
+        };
+
+        document.head.appendChild(script);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadPacketa);
+      } else {
+        loadPacketa();
+      }
+    })();
+  </script>
 </head>
 
 <body>

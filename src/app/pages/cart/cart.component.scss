@@ -1,10 +1,6 @@
 @use '../../../styles/variables' as *;
 @use 'sass:color';
 
-
-
-
-
 .stepper-wrapper {
     .step-circle {
         width: 32px;
@@ -61,106 +57,4 @@
 
 
 .mobile-stepper {
-    .step-cards {
-        .step-card {
-            border: 1px solid #d9d9d9;
-            border-radius: 12px;
-            background: white;
-            transition: all 0.3s ease;
-            overflow: hidden;
-
-            &.active {
-                box-shadow: 0 4px 12px rgba($color_accent, 0.15);
-            }
-
-            &.completed {
-                border-color: #b8733380;
-
-                .step-card-header {
-                    background: linear-gradient(135deg, color.scale($color_accent, $lightness: 50%) 0%, color.scale($color_accent, $lightness: 60%) 100%);
-                    color: black;
-                    cursor: pointer;
-                }
-            }
-
-            &.disabled {
-                opacity: 0.6;
-                pointer-events: none;
-
-                .step-card-header {
-                    background-color: #f8f9fa;
-                }
-            }
-
-            .step-card-header {
-                padding: 1rem 1.25rem;
-                border-bottom: 1px solid #f0f0f0;
-                transition: all 0.3s ease;
-
-                .step-number {
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 50%;
-                    background-color: #f8f9fa;
-                    border: 2px solid #dee2e6;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: 600;
-                    font-size: 0.875rem;
-                    transition: all 0.3s ease;
-                }
-
-            }
-
-            &.active .step-card-header .step-number {
-                background-color: $color_accent;
-                border-color: $color_accent;
-                color: white;
-            }
-
-            &.completed .step-card-header .step-number {
-                background-color: white;
-                border-color: white;
-                color: $color_accent;
-
-                i {
-                    position: relative;
-                    top: 2px
-                }
-            }
-
-            .step-card-body {
-                padding: 1.25rem;
-                transition: opacity 0.3s ease, max-height 0.3s ease;
-
-                &.d-none {
-                    display: none !important;
-                }
-            }
-        }
-    }
-}
-
-// Mobile optimizations
-@media (max-width: 576px) {
-    .mobile-stepper {
-        .step-cards .step-card {
-            border-radius: 8px;
-
-            .step-card-header {
-                padding: 0.875rem 1rem;
-
-                .step-number {
-                    width: 28px;
-                    height: 28px;
-                    font-size: 0.8rem;
-                }
-
-                h6 {
-                    font-size: 0.9rem;
-                }
-            }
-        }
-    }
 }

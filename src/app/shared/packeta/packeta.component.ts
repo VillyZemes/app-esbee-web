@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
@@ -15,7 +15,7 @@ declare const Packeta: any;
   templateUrl: './packeta.component.html',
   styleUrl: './packeta.component.scss'
 })
-export class PacketaComponent implements OnInit {
+export class PacketaComponent implements OnInit, OnDestroy {
   @Input() options: PacketaOptionsModel;
   @Output() pickupPointSelected = new EventEmitter<PacketaPickupPointModel | null>();
   @Output() addressSelected = new EventEmitter<PacketaAddressModel | null>();
@@ -28,6 +28,9 @@ export class PacketaComponent implements OnInit {
   deliveryType = '';
 
   private readonly packetaApiKey = environment.packetaApiKey;
+  private isWidgetOpen = false;
+  private widgetContainer: HTMLElement | null = null;
+  private static isAnyWidgetOpen = false; // Static flag to prevent multiple instances
 
   packetaPickupOptions = {
     country: "cz,sk",
@@ -65,25 +68,78 @@ export class PacketaComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.closeWidget();
+  }
+
   openPacketaWidget(): void {
-    if (this.deliveryType === 'pickup') {
-      Packeta.Widget.pick(this.packetaApiKey, this.showSelectedPickupPoint.bind(this), this.packetaPickupOptions);
-    } else if (this.deliveryType === 'address') {
-      Packeta.Widget.pick(this.packetaApiKey, this.showSelectedAddress.bind(this), this.packetaAddressOptions);
+    // Check if Packeta is available
+    if (typeof Packeta === 'undefined') {
+      return;
+    }
+
+    // Prevent opening multiple widgets globally
+    if (PacketaComponent.isAnyWidgetOpen) {
+      return;
+    }
+
+    // Close any existing widget first
+    this.closeWidget();
+
+    try {
+      this.isWidgetOpen = true;
+      PacketaComponent.isAnyWidgetOpen = true;
+
+      const callbackFunction = this.deliveryType === 'pickup' 
+        ? this.showSelectedPickupPoint.bind(this)
+        : this.showSelectedAddress.bind(this);
+      
+      // Create a wrapper callback to ensure it's always called
+      const wrappedCallback = (result: any) => {
+        callbackFunction(result);
+      };
+
+      if (this.deliveryType === 'pickup') {
+        Packeta.Widget.pick(this.packetaApiKey, wrappedCallback, this.packetaPickupOptions);
+      } else if (this.deliveryType === 'address') {
+        Packeta.Widget.pick(this.packetaApiKey, wrappedCallback, this.packetaAddressOptions);
+      }
+    } catch (error) {
+      this.isWidgetOpen = false;
+      PacketaComponent.isAnyWidgetOpen = false;
+    }
+  }
+
+  private closeWidget(): void {
+    if (!this.isWidgetOpen) {
+      return;
+    }
+
+    try {
+      if (typeof Packeta !== 'undefined' && Packeta.Widget && Packeta.Widget.close) {
+        Packeta.Widget.close();
+      }
+    } catch (error) {
+    } finally {
+      this.isWidgetOpen = false;
+      PacketaComponent.isAnyWidgetOpen = false;
+      this.widgetContainer = null;
     }
   }
 
   private showSelectedPickupPoint(point: any): void {
-    this.selectedPointText = '';
-    this.selectedPickupPoint = null;
+    this.isWidgetOpen = false;
+    PacketaComponent.isAnyWidgetOpen = false;
+    this.widgetContainer = null;
 
-    if (point) {
-      console.log("Selected pickup point", point);
+    if (point && point !== null && point !== undefined) {
       this.selectedPointText = "Výdajné miesto: " + point.name;
       this.selectedPickupPoint = point;
       this.pickupPointSelected.emit(point);
     } else {
-      // Widget was closed without selection
+      // Widget was closed without selection - reset delivery type
+      this.selectedPointText = '';
+      this.selectedPickupPoint = null;
       this.deliveryType = '';
       this.deliveryTypeChanged.emit('');
       this.pickupPointSelected.emit(null);
@@ -91,17 +147,19 @@ export class PacketaComponent implements OnInit {
   }
 
   private showSelectedAddress(address: any): void {
-    this.selectedAddressText = '';
-    this.selectedAddress = null;
+    this.isWidgetOpen = false;
+    PacketaComponent.isAnyWidgetOpen = false;
+    this.widgetContainer = null;
 
-    if (address) {
-      const addressObject = address?.address;
-      console.log("Selected address", addressObject);
-      this.selectedAddressText = `Address: ${addressObject.street} ${addressObject.houseNumber}, ${addressObject.city} ${addressObject.postcode}`;
+    if (address && address !== null && address !== undefined && address.address) {
+      const addressObject = address.address;
+      this.selectedAddressText = `Address: ${addressObject?.street} ${addressObject?.houseNumber}, ${addressObject?.city} ${addressObject?.postcode}`;
       this.selectedAddress = addressObject;
       this.addressSelected.emit(addressObject);
     } else {
-      // Widget was closed without selection
+      // Widget was closed without selection - reset delivery type
+      this.selectedAddressText = '';
+      this.selectedAddress = null;
       this.deliveryType = '';
       this.deliveryTypeChanged.emit('');
       this.addressSelected.emit(null);
@@ -111,10 +169,19 @@ export class PacketaComponent implements OnInit {
   onDeliveryTypeChange(event: any): void {
     this.deliveryTypeChanged.emit(event.target.value);
 
+    // Clear selections when changing delivery type
+    this.selectedPointText = '';
+    this.selectedPickupPoint = null;
+    this.selectedAddressText = '';
+    this.selectedAddress = null;
+
     if (event.target.value === 'pickup' || event.target.value === 'address') {
+      // Longer delay to ensure cleanup is complete
       setTimeout(() => {
         this.openPacketaWidget();
-      }, 100);
+      }, 500);
+    } else {
+      this.closeWidget();
     }
   }
 }
