@@ -1,8 +1,7 @@
-@use 'styles/variables';
+@use 'styles/variables' as *;
 @use 'styles/fonts';
 @use 'styles/colors';
 @use 'styles/buttons';
-
 @use 'styles/icons';
 
 
@@ -15,6 +14,10 @@ body {
 /* Enable smooth scrolling for the entire app */
 html {
     scroll-behavior: smooth;
+}
+
+.btn-outline-black {
+    border-color: black;
 }
 
 /* Hide scrollbars while maintaining scroll functionality for containers */
@@ -57,8 +60,9 @@ nav.navbar {
 }
 
 
-.sb-bg-primary {
-    background-color: #ceccc0 !important;
+.sb-bg-primary,
+.bg-primary {
+    background-color: $color_accent !important;
 }
 
 .sb-navbar-brand {

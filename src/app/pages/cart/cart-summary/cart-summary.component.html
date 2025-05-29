@@ -1,0 +1,55 @@
+<div class="order-summary bg-cc-secondary border rounded-3 p-4">
+    <h4 class="fw-bold mb-4">Súhrn objednávky</h4>
+
+    <div class="summary-row d-flex justify-content-between mb-2">
+        <span>Bez DPH</span>
+        <span>{{ cartTotals?.totalWithoutVat| sbPrice }}</span>
+    </div>
+    <div class="summary-row d-flex justify-content-between mb-2">
+        <span>DPH</span>
+        <span>{{ cartTotals?.totalVat| sbPrice }}</span>
+    </div>
+    <div class="summary-row d-flex justify-content-between mb-2 fw-bold">
+        <span>Produkty ({{ productsCount }})</span>
+        <span>{{ cartTotals?.totalPrice| sbPrice }}</span>
+    </div>
+
+    <hr class="my-3">
+
+    <div class="summary-total d-flex justify-content-between mb-4">
+        <span class="fw-bold fs-5">Celkom</span>
+        <span class="fw-bold fs-4 text-accent">{{ cartTotals?.totalPrice | sbPrice }}</span>
+    </div>
+
+    <button class="btn btn-accent w-100 btn-lg mb-3">
+        <div class="cc-flex-center-center">
+            <span class="material-symbols-outlined me-2">shopping_bag</span>
+            Pokračovať k pokladni
+        </div>
+    </button>
+
+    <a routerLink="/obchod" class="btn btn-outline-black w-100">
+        <div class="cc-flex-center-center">
+            <span class="material-symbols-outlined me-2">arrow_back</span>
+            Pokračovať v nákupe
+        </div>
+    </a>
+
+    <!-- Benefits -->
+    <div class="benefits mt-4">
+        @if (freeShippingThreshold) {
+        <div class="benefit-item d-flex align-items-center mb-2">
+            <span class="material-symbols-outlined text-success me-2">local_shipping</span>
+            <small>Bezplatná doprava nad {{ freeShippingThreshold | sbPrice }}</small>
+        </div>
+        }
+        <div class="benefit-item d-flex align-items-center mb-2">
+            <span class="material-symbols-outlined text-success me-2">verified</span>
+            <small>Záruka kvality</small>
+        </div>
+        <div class="benefit-item d-flex align-items-center">
+            <span class="material-symbols-outlined text-success me-2">support</span>
+            <small>24/7 zákaznícka podpora</small>
+        </div>
+    </div>
+</div>

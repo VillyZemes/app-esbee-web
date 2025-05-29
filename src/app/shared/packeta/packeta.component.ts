@@ -22,9 +22,9 @@ export class PacketaComponent implements OnInit {
   @Output() deliveryTypeChanged = new EventEmitter<string>();
 
   selectedPointText = '';
-  selectedPickupPoint: PacketaPickupPointModel;
+  selectedPickupPoint: any = null;
   selectedAddressText = '';
-  selectedAddress: PacketaAddressModel;
+  selectedAddress: any = null;
   deliveryType = '';
 
   private readonly packetaApiKey = environment.packetaApiKey;
