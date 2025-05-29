@@ -4,14 +4,16 @@
         <label class="d-flex flex-column flex-md-row align-items-center w-100">
             <div class="d-flex align-items-center mb-2 mb-md-0">
                 <input type="radio" name="packeta-delivery" value="pickup" [(ngModel)]="deliveryType"
-                    (change)="onDeliveryTypeChange($event)"
-                    class="form-check-input me-3 my-0">
+                    (change)="onDeliveryTypeChange($event)" class="form-check-input me-3 my-0">
                 <img src="packeta/Packeta logo.png" alt="Packeta" class="me-3" style="height: 32px; width: auto;">
             </div>
             <div class="flex-grow-1">
                 <div class="fw-semibold">Packeta – Výdajné miesto a Z-BOX ({{ 2.99 | sbPrice }})</div>
                 <div class="text-muted small">Objednávky prijaté v pondelok až piatok do 12:00 doručujeme
                     nasledujúci pracovný deň.</div>
+                <div *ngIf="deliveryType === 'pickup' && selectedPointText" class="mt-2 p-2 bg-light rounded small">
+                    {{ selectedPointText }}
+                </div>
             </div>
         </label>
     </div>
@@ -21,14 +23,16 @@
         <label class="d-flex flex-column flex-md-row align-items-center w-100">
             <div class="d-flex align-items-center mb-2 mb-md-0">
                 <input type="radio" name="packeta-delivery" value="address" [(ngModel)]="deliveryType"
-                    (change)="onDeliveryTypeChange($event)"
-                    class="form-check-input me-3 my-0">
+                    (change)="onDeliveryTypeChange($event)" class="form-check-input me-3 my-0">
                 <img src="packeta/Packeta logo.png" alt="Packeta" class="me-3" style="height: 32px; width: auto;">
             </div>
             <div class="flex-grow-1">
                 <div class="fw-semibold">Packeta – Doručenie na adresu ({{ 2.99 | sbPrice }})</div>
                 <div class="text-muted small">Objednávky prijaté v pondelok až piatok do 12:00 doručujeme
                     nasledujúci pracovný deň.</div>
+                <div *ngIf="deliveryType === 'address' && selectedAddressText" class="mt-2 p-2 bg-light rounded small">
+                    {{ selectedAddressText }}
+                </div>
             </div>
         </label>
     </div>
