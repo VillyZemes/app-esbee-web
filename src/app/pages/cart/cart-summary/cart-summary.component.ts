@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { OrderPostModel } from '../../../models/OrderPostModel';
+import { OrderPostModel } from '../../../models/OrderPost.model';
 import { PricePipe } from '../../../pipes/price.pipe';
 import { CartItemWithDetails } from '../../../shared/models/CartModel';
 import { SettingsModel } from '../../../shared/models/SettingsModel';

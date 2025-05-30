@@ -22,7 +22,9 @@
                         </div>
                         <div>
                             <h6 class="mb-1 fw-bold">Adresa</h6>
-                            <p class="mb-0">Vysokoškolákov 8, 010 08 Žilina, Slovensko</p>
+                            <p class="mb-0">{{ companyInfo.companyAddress.street }} {{
+                                companyInfo.companyAddress.houseNumber }}, {{ companyInfo.companyAddress.postalCode }}
+                                {{ companyInfo.companyAddress.city }}, {{ companyInfo.companyAddress.country }}</p>
                         </div>
                     </div>
 
@@ -32,7 +34,7 @@
                         </div>
                         <div>
                             <h6 class="mb-1 fw-bold">Telefón</h6>
-                            <p class="mb-0">+421 900 123 456</p>
+                            <p class="mb-0">{{ companyInfo.phone }}</p>
                         </div>
                     </div>
 
@@ -42,7 +44,8 @@
                         </div>
                         <div>
                             <h6 class="mb-1 fw-bold">Email</h6>
-                            <p class="mb-0"><a href="mailto:info@esbee.sk" class="text-accent">info&#64;esbee.sk</a></p>
+                            <p class="mb-0"><a href="mailto:{{ companyInfo.email }}" class="text-accent">{{
+                                    companyInfo.email }}</a></p>
                         </div>
                     </div>
 
@@ -52,7 +55,7 @@
                         </div>
                         <div>
                             <h6 class="mb-1 fw-bold">Otváracie hodiny</h6>
-                            <p class="mb-0">Pondelok - Piatok: 9:00 - 17:00</p>
+                            <p class="mb-0">{{ companyInfo.openingHours }}</p>
                         </div>
                     </div>
                 </div>
@@ -60,15 +63,19 @@
                 <div class="social-media mt-5">
                     <h6 class="fw-bold mb-3 text-center text-lg-start">Nájdete nás na</h6>
                     <div class="d-flex justify-content-center justify-content-lg-start gap-3">
-                        <a href="#"
+                        <a [href]="companyInfo.social_facebook.url" target="_blank"
                             class="social-icon d-flex align-items-center justify-content-center bg-social-facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#"
+                        <a [href]="companyInfo.social_instagram.url" target="_blank"
                             class="social-icon d-flex align-items-center justify-content-center bg-social-instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#"
+                        <a [href]="companyInfo.social_youtube.url" target="_blank"
+                            class="social-icon d-flex align-items-center justify-content-center bg-social-youtube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a [href]="companyInfo.social_linkedin.url" target="_blank"
                             class="social-icon d-flex align-items-center justify-content-center bg-social-linkedin">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
@@ -83,36 +90,29 @@
                 <h4 class="fw-bold mb-4">Napíšte nám</h4>
                 <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
                     <div class="row g-4">
+
                         <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="name" placeholder="Vaše meno"
-                                    formControlName="name">
-                                <label for="name">Vaše meno</label>
-                            </div>
+                            <sb-form-field label="Váš email" type="email" placeholder="vas.email@priklad.sk"
+                                [control]="contactForm.get('email')" formControlName="email">
+                            </sb-form-field>
                         </div>
 
                         <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="email" class="form-control" id="email" placeholder="Váš email"
-                                    formControlName="email">
-                                <label for="email">Váš email</label>
-                            </div>
+                            <sb-form-field label="Vaše meno" placeholder="Vaše meno a priezvisko"
+                                [control]="contactForm.get('name')" formControlName="name">
+                            </sb-form-field>
                         </div>
 
                         <div class="col-md-12">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="subject" placeholder="Predmet"
-                                    formControlName="subject">
-                                <label for="subject">Predmet</label>
-                            </div>
+                            <sb-form-field label="Predmet" placeholder="Predmet vašej správy"
+                                [control]="contactForm.get('subject')" formControlName="subject">
+                            </sb-form-field>
                         </div>
 
                         <div class="col-md-12">
-                            <div class="form-floating">
-                                <textarea class="form-control" id="message" placeholder="Vaša správa"
-                                    style="height: 150px" formControlName="message"></textarea>
-                                <label for="message">Vaša správa</label>
-                            </div>
+                            <sb-form-field label="Vaša správa" type="textarea" placeholder="Napíšte nám vašu správu..."
+                                [rows]="6" [control]="contactForm.get('message')" formControlName="message">
+                            </sb-form-field>
                         </div>
 
                         <div class="col-md-12">
@@ -139,23 +139,29 @@
     <div class="row mb-5">
         <div class="col-lg-12">
             <div class="company-info p-4 bg-white cc-border">
-                <h4 class="fw-bold mb-4">Firemné údaje</h4>
+
                 <div class="row">
                     <div class="col-md-6">
+                        <h4 class="fw-bold mb-4">Firemné údaje</h4>
                         <ul class="list-unstyled">
-                            <li class="mb-2"><strong>Obchodné meno:</strong> eSBee s.r.o.</li>
-                            <li class="mb-2"><strong>IČO:</strong> 12345678</li>
-                            <li class="mb-2"><strong>DIČ:</strong> 2023456789</li>
-                            <li class="mb-2"><strong>IČ DPH:</strong> SK2023456789</li>
+                            <li class="mb-2"><strong>Obchodné meno:</strong> {{ companyInfo.companyName }}</li>
+                            <li class="mb-2"><strong>IČO:</strong> {{ companyInfo.ico }}</li>
+                            <li class="mb-2"><strong>DIČ:</strong> {{ companyInfo.dic }}</li>
+                            <li class="mb-2"><strong>Zapísaná:</strong> {{ companyInfo.businessRegistration }}</li>
+                            <!-- <li class="mb-2"><strong>IČ DPH:</strong> SK2023456789</li> -->
                         </ul>
                     </div>
                     <div class="col-md-6">
                         <ul class="list-unstyled">
-                            <li class="mb-2"><strong>Banka:</strong> Slovenská sporiteľňa, a.s.</li>
-                            <li class="mb-2"><strong>IBAN:</strong> SK12 0900 0000 0000 1234 5678</li>
-                            <li class="mb-2"><strong>SWIFT:</strong> GIBASKBX</li>
-                            <li class="mb-2"><strong>Zapísaná:</strong> v Obchodnom registri Okresného súdu Žilina,
-                                oddiel: Sro, vložka č. 12345/L</li>
+                            <li class="mb-2">
+                                <img src="payment/tatra_banka_member.jpg" alt="Packeta" class="me-3"
+                                    style="height: 100px; width: auto;">
+
+                            </li>
+                            <li class="mb-2"><strong>Banka:</strong> {{ companyInfo.bankName }}</li>
+                            <li class="mb-2"><strong>IBAN:</strong> {{ companyInfo.iban }}</li>
+                            <li class="mb-2"><strong>SWIFT:</strong> {{ companyInfo.bankSwift }}</li>
+
                         </ul>
                     </div>
                 </div>
@@ -164,7 +170,7 @@
     </div>
 
     <!-- Map Section -->
-    <div class="row mb-5">
+    <!-- <div class="row mb-5">
         <div class="col-lg-12">
             <div class="map-container cc-border">
                 <h4 class="fw-bold mb-4">Kde nás nájdete</h4>
@@ -177,7 +183,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- FAQ Section -->
     <div class="row mb-5">
@@ -186,7 +192,7 @@
                 <h4 class="fw-bold mb-4">Najčastejšie otázky</h4>
 
                 <div class="accordion" id="faqAccordion">
-                    <div class="accordion-item cc-border mb-3">
+                    <div class="accordion-item cc-border border-top-0 mb-3">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">

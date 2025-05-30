@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { FormFieldComponent, FormFieldOptions } from '../../../shared/form-field/form-field.component';
 import { PacketaAddressModel } from '../../../shared/packeta/models/PacketaAddressModel';
-import { CountryModel } from '../../../models/CountryModel';
+import { CountryModel } from '../../../models/Country.model';
 import { CountriesService } from '../../../services/countries.service';
 
 @Component({

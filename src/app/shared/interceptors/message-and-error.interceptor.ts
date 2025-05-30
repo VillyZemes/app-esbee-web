@@ -1,14 +1,14 @@
-/* import { HttpInterceptorFn, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap, throwError } from 'rxjs';
 import { inject } from '@angular/core';
-import { AuthService } from '../services/core/auth.service';
-import { MessageModel } from '../models/shared/MessageModel';
-import { MessageService } from '../services/core/message.service';
+import { MessageModel } from '../models/MessageModel';
+import { MessageService } from '../services/message.service';
+//import { AuthService } from '../services/core/auth.service';
 
 
 export const messageAndErrorInterceptor: HttpInterceptorFn = (req, next) => {
     const messageService = inject(MessageService);
-    const authService = inject(AuthService);
+    //const authService = inject(AuthService);
 
     return next(req).pipe(
         tap((event) => {
@@ -51,16 +51,15 @@ export const messageAndErrorInterceptor: HttpInterceptorFn = (req, next) => {
                     case 0:
                         console.error('ERRORS.BACKEND_NOT_RESPONDING');
                         messageService.showError('ERRORS.BACKEND_NOT_RESPONDING');
-                        authService.deleteAllCookiesAndNavigate();
+                        //authService.deleteAllCookiesAndNavigate();
                         break;
                     case 401:
                     case 403:
                         console.warn('ERRORS.UNAUTHORIZED_REDIRECTING');
                         messageService.showError('ERRORS.UNAUTHORIZED_REDIRECTING');
-                        authService.deleteAllCookiesAndNavigate();
+                        //authService.deleteAllCookiesAndNavigate();
                         break;
                     case 302:
-                        // Additional logging for 302 response
                         console.warn('ERRORS.RECEIVED_REDIRECT_UNAUTHORIZED', {
                             url: error.url,
                             statusText: error.statusText,
@@ -68,7 +67,7 @@ export const messageAndErrorInterceptor: HttpInterceptorFn = (req, next) => {
                             message: error.message,
                         });
                         messageService.showError('ERRORS.RECEIVED_REDIRECT_UNAUTHORIZED');
-                        authService.deleteAllCookiesAndNavigate();
+                        //authService.deleteAllCookiesAndNavigate();
                         break;
                     default:
                         messageService.processError(
@@ -86,4 +85,3 @@ export const messageAndErrorInterceptor: HttpInterceptorFn = (req, next) => {
         })
     );
 };
- */

@@ -1,7 +1,7 @@
 <div class="form-field" [class.has-success]="control?.valid && (control?.dirty || control?.touched)">
-    <label *ngIf="label" class="form-label" [class.text-danger]="required && isInvalid">
+    <label *ngIf="label" [for]="type + '-' + label" class="form-label">
         {{ label }}
-        <span *ngIf="required" class="text-danger">*</span>
+        <span *ngIf="isRequired" class="text-danger">*</span>
     </label>
 
     <!-- Custom Select Dropdown -->

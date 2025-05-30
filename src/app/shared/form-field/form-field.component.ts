@@ -21,7 +21,6 @@ export class FormFieldComponent implements ControlValueAccessor {
     @Input() label: string = '';
     @Input() placeholder: string = '';
     @Input() type: string = 'text';
-    @Input() required: boolean = false;
     @Input() errorMessage: string = '';
     @Input() formatExample: string = '';
     @Input() size: 'sm' | 'md' | 'lg' = 'lg';
@@ -35,6 +34,16 @@ export class FormFieldComponent implements ControlValueAccessor {
 
     private onChange = (value: any) => { };
     private onTouched = () => { };
+
+    get isRequired(): boolean {
+        if (!this.control) return false;
+
+        const validator = this.control.validator;
+        if (!validator) return false;
+
+        const validation = validator({} as any);
+        return validation && validation['required'];
+    }
 
     get isInvalid(): boolean {
         return !!(this.control && this.control.invalid && (this.control.dirty || this.control.touched));

@@ -180,6 +180,20 @@ a i[class^="fa-"] {
     }
 }
 
+.bg-social-youtube {
+    background-color: rgba(255, 0, 0, 0.1) !important;
+    color: #ff0000 !important;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: rgba(255, 0, 0, 0.2) !important;
+    }
+
+    i {
+        color: #ff0000 !important;
+    }
+}
+
 .social-icon {
     text-decoration: none !important;
     width: 40px;
@@ -212,5 +226,35 @@ a i[class^="fa-"] {
     &.color-box-white {
         background-color: #fff;
         border-color: #ccc;
+    }
+}
+
+/* Global checkbox styling with accent color */
+.form-check-input {
+    &:checked {
+        background-color: $color_accent !important;
+        border-color: $color_accent !important;
+    }
+
+    &:focus {
+        border-color: $color_accent !important;
+        box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.25) !important;
+    }
+
+    &:checked:focus {
+        box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.25) !important;
+    }
+}
+
+/* Bootstrap radio button styling */
+.form-check-input[type="radio"] {
+    &:checked {
+        background-color: $color_accent !important;
+        border-color: $color_accent !important;
+    }
+
+    &:focus {
+        border-color: $color_accent !important;
+        box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.25) !important;
     }
 }

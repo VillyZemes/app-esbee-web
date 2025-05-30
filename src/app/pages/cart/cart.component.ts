@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { OrderPostModel } from '../../models/OrderPostModel';
+import { OrderPostModel } from '../../models/OrderPost.model';
 import { CartService } from '../../services/cart.service';
 import { SettingsService } from '../../services/settings.service';
 import { CartItemWithDetails, CartModel } from '../../shared/models/CartModel';
@@ -10,7 +10,7 @@ import { ProgressHeaderComponent } from '../../shared/progress-header/progress-h
 import { UtilsService } from '../../shared/services/utils.service';
 import { StepCardComponent, StepConfig } from '../../shared/step-card/step-card.component';
 import { CartEmptyComponent } from "./cart-empty/cart-empty.component";
-import { CartBillingDetailsComponent } from './cart-finish-order/cart-billing-details.component';
+import { CartBillingDetailsComponent } from './cart-billing-details/cart-billing-details.component';
 import { CartProductsComponent, PriceTotals } from "./cart-products/cart-products.component";
 import { CartSummaryComponent } from './cart-summary/cart-summary.component';
 import { CartPaymentComponent } from "./cart-payment/cart-payment.component";
