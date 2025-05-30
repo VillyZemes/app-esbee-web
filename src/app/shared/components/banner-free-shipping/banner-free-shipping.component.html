@@ -1,0 +1,51 @@
+<!-- Free Shipping Banner -->
+@if (shippingPrice && price < freeShippingThreshold) { <div class="free-shipping-banner p-3">
+    <div class="d-flex align-items-center gap-3">
+        <div class="shipping-icon">
+            <span class="material-symbols-outlined text-accent fs-4">local_shipping</span>
+        </div>
+        <div class="flex-grow-1">
+            <div class="fw-bold text-dark mb-1">
+                Nakúpte ešte za {{ (freeShippingThreshold - price) | sbPrice }} a máte dopravu zdarma!
+            </div>
+            <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-accent" [style.width.%]="(price / freeShippingThreshold) * 100">
+                </div>
+            </div>
+            <small class="text-dark">
+                Zostáva vám {{ (freeShippingThreshold - price) | sbPrice }} do bezplatnej dopravy
+            </small>
+            <!-- Link for small devices - below the text -->
+            <div class="d-block d-md-none mt-2">
+                <a class="d-flex align-items-center text-decoration-none text-accent" href="/obchod">
+                    <span class="material-symbols-outlined border-0 me-2">shopping_bag</span>
+                    Prejsť do obchodu
+                </a>
+            </div>
+        </div>
+        <!-- Link for larger devices - on the right side -->
+        <div class="d-none d-md-block">
+            <a class="d-flex align-items-center text-decoration-none text-accent" href="/obchod">
+                <span class="material-symbols-outlined border-0 me-2">shopping_bag</span>
+                Prejsť do obchodu
+            </a>
+        </div>
+    </div>
+    </div>
+    } @else if (shippingPrice && price >= freeShippingThreshold) {
+    <div class="free-shipping-banner success p-3 mx-3 mb-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="shipping-icon">
+                <span class="material-symbols-outlined text-accent fs-4">verified</span>
+            </div>
+            <div class="flex-grow-1">
+                <div class="fw-bold text-accent">
+                    Gratulujeme! Máte dopravu zdarma!
+                </div>
+                <small class="text-dark">
+                    Ušetrili ste <span class="fw-bold fs-6">{{ shippingPrice | sbPrice }}</span> na doprave
+                </small>
+            </div>
+        </div>
+    </div>
+    }

@@ -76,7 +76,7 @@ export class CartBillingDetailsComponent implements OnInit {
     });
 
     // Fill with test data for development
-    this.fillTestData();
+    //this.fillTestData();
 
     // Add conditional validators
     this.orderForm.get('isCompany')?.valueChanges.subscribe(isCompany => {

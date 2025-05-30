@@ -13,8 +13,7 @@
                 <!-- Mobile-First Progress Stepper -->
                 <div class="mobile-stepper mb-4">
                     <!-- Progress Header -->
-                    <sb-progress-header [currentStep]="currentStep" [totalSteps]="totalSteps"
-                        stepText="Krok"></sb-progress-header>
+
 
                     <!-- Step Cards -->
                     <div class="step-cards">
@@ -27,33 +26,48 @@
                             @switch (config.step) {
                             @case (CART_STEPS.PRODUCTS) {
                             <div id="step-products">
-                                <sb-cart-products (cartTotalsChanged)="onCartTotalChanged($event)"></sb-cart-products>
+                                <sb-progress-header [currentStep]="currentStep" [totalSteps]="totalSteps"
+                                    stepText="Krok"></sb-progress-header>
+                                <sb-cart-products [settings]="settings" (cartTotalsChanged)="onCartTotalChanged($event)"
+                                    (cartItemWithDetailsCompleted)="onCartItemWithDetailsCompleted($event)"></sb-cart-products>
                             </div>
                             }
                             @case (CART_STEPS.DELIVERY) {
                             <div id="step-delivery">
+                                <sb-progress-header [currentStep]="currentStep" [totalSteps]="totalSteps"
+                                    stepText="Krok"></sb-progress-header>
                                 <p class="text-muted small mb-3">Vyberte si spôsob doručenia</p>
-                                <sb-packeta [settings]="settings" [totalPrice]="cartTotals.totalPrice"
+                                <sb-packeta [settings]="settings" [totalPrice]="cartTotals.price"
                                     (pickupPointSelected)="onPickupPointSelected($event)"
                                     (addressSelected)="onAddressSelected($event)"
+                                    (shippingPriceChanged)="onShippingPriceChanged($event)"
                                     (deliveryTypeChanged)="onDeliveryTypeChanged($event)"></sb-packeta>
                             </div>
                             }
                             @case (CART_STEPS.PAYMENT) {
                             <div id="step-payment">
+                                <sb-progress-header [currentStep]="currentStep" [totalSteps]="totalSteps"
+                                    stepText="Krok"></sb-progress-header>
                                 <p class="text-muted small mb-3">Vyberte si spôsob platby</p>
-                                TODO
+                                <sb-cart-payment
+                                    (paymentMethodChanged)="onPaymentMethodChanged($event)"></sb-cart-payment>
                             </div>
                             }
                             @case (CART_STEPS.FORM) {
                             <div id="step-form">
+                                <sb-progress-header [currentStep]="currentStep" [totalSteps]="totalSteps"
+                                    stepText="Krok"></sb-progress-header>
                                 <sb-cart-billing-details #orderForm [packetaShippingAddress]="selectedAddress"
                                     (orderSubmitted)="onOrderFormSubmitted($event)"></sb-cart-billing-details>
                             </div>
                             }
                             @case (CART_STEPS.SUMMARY) {
                             <div id="step-summary">
+                                <sb-progress-header [currentStep]="currentStep" [totalSteps]="totalSteps"
+                                    stepText="Krok"></sb-progress-header>
                                 <sb-cart-summary [cartTotals]="cartTotals" [productsCount]="productsCount"
+                                    [settings]="settings" [orderData]="orderData" [shippingPrice]="shippingPrice"
+                                    [cartItemWithDetails]="cartItemWithDetails"
                                     [freeShippingThreshold]="settings?.shipping_free_threshold"
                                     (backToDelivery)="setCurrentStepAndScroll(CART_STEPS.FORM)"></sb-cart-summary>
                             </div>

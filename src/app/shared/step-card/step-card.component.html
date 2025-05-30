@@ -1,8 +1,5 @@
-<div class="step-card mb-3" 
-     [class.active]="isActive"
-     [class.completed]="isCompleted"
-     [class.disabled]="isDisabled">
-  
+<div class="step-card mb-3" [class.active]="isActive" [class.completed]="isCompleted" [class.disabled]="isDisabled">
+
   <div class="step-card-header" (click)="onStepHeaderClick()">
     <div class="d-flex align-items-center">
       <div class="step-number">
@@ -36,12 +33,10 @@
           Späť
         </button>
         }
-        
+
         @if (config.nextStep) {
-        <button class="btn btn-accent" 
-                [class.ms-auto]="!config.showBackButton"
-                [disabled]="nextButtonDisabled"
-                (click)="onNextClick()">
+        <button class="btn btn-accent" [class.ms-auto]="!config.showBackButton" [disabled]="nextButtonDisabled"
+          (click)="onNextClick()">
           Pokračovať
           <i class="fas fa-arrow-right ms-2"></i>
         </button>

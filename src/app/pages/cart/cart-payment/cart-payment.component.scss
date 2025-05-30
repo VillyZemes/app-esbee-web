@@ -1,0 +1,59 @@
+@use '../../../../styles/variables' as *;
+
+.payment-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    color: #6c757d;
+
+    .material-symbols-outlined {
+        font-size: 20px;
+    }
+}
+
+.payment-cards {
+    .material-symbols-outlined {
+        font-size: 16px;
+    }
+}
+
+label {
+    cursor: pointer;
+    margin-bottom: 0;
+
+    &:hover {
+        .payment-icon {
+            background-color: #e9ecef;
+        }
+    }
+}
+
+.border-primary {
+    border-color: $color_accent !important;
+
+    .payment-icon {
+        background-color: rgba($color_accent, 0.1);
+        border-color: $color_accent;
+        color: $color_accent;
+    }
+}
+
+.bg-light {
+    background-color: rgba($color_accent, 0.1) !important;
+}
+
+.form-check-input:checked {
+    background-color: $color_accent !important;
+    border-color: $color_accent !important;
+}
+
+.form-check-input:focus {
+    border-color: $color_accent !important;
+    box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.25) !important;
+}
+
+.form-check-input:checked:focus {
+    box-shadow: 0 0 0 0.25rem rgba($color_accent, 0.25) !important;
+}

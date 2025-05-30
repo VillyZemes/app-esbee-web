@@ -197,3 +197,20 @@ a i[class^="fa-"] {
         transform: translateY(-3px);
     }
 }
+
+
+.color-box-mini {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+
+    &.color-box-black {
+        background-color: #000;
+    }
+
+    &.color-box-white {
+        background-color: #fff;
+        border-color: #ccc;
+    }
+}

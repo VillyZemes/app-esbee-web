@@ -23,6 +23,7 @@ export class PacketaComponent implements OnInit, OnDestroy {
   @Output() pickupPointSelected = new EventEmitter<PacketaPickupPointModel | null>();
   @Output() addressSelected = new EventEmitter<PacketaAddressModel | null>();
   @Output() deliveryTypeChanged = new EventEmitter<'pickup' | 'address'>();
+  @Output() shippingPriceChanged = new EventEmitter<number>();
 
   selectedPointText = '';
   selectedPickupPoint: any = null;
@@ -138,10 +139,11 @@ export class PacketaComponent implements OnInit, OnDestroy {
     this.isWidgetOpen = false;
     PacketaComponent.isAnyWidgetOpen = false;
     this.widgetContainer = null;
-
+    console.log('Selected point:', point);
     if (point && point !== null && point !== undefined) {
       this.selectedPointText = "Výdajné miesto: " + point.name;
       this.selectedPickupPoint = point;
+      this.shippingPriceChanged.emit(this.utilsService.getShippingPrice(this.totalPrice, this.settings.shipping_packeta_pudo, this.settings.shipping_free_threshold));
       this.pickupPointSelected.emit(point);
     } else {
       // Widget was closed without selection - reset delivery type
@@ -150,6 +152,8 @@ export class PacketaComponent implements OnInit, OnDestroy {
       this.deliveryType = null;
       this.deliveryTypeChanged.emit(null);
       this.pickupPointSelected.emit(null);
+      this.shippingPriceChanged.emit(null);
+
     }
   }
 
@@ -162,6 +166,7 @@ export class PacketaComponent implements OnInit, OnDestroy {
       const addressObject = address.address;
       this.selectedAddressText = `Address: ${addressObject?.street} ${addressObject?.houseNumber}, ${addressObject?.city} ${addressObject?.postcode}`;
       this.selectedAddress = addressObject;
+      this.shippingPriceChanged.emit(this.utilsService.getShippingPrice(this.totalPrice, this.settings.shipping_packeta_home, this.settings.shipping_free_threshold));
       this.addressSelected.emit(addressObject);
     } else {
       // Widget was closed without selection - reset delivery type
@@ -170,6 +175,7 @@ export class PacketaComponent implements OnInit, OnDestroy {
       this.deliveryType = null;
       this.deliveryTypeChanged.emit(null);
       this.addressSelected.emit(null);
+      this.shippingPriceChanged.emit(null);
     }
   }
 

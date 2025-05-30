@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { OrderPostModel } from '../../models/OrderPostModel';
 import { CartService } from '../../services/cart.service';
 import { SettingsService } from '../../services/settings.service';
-import { CartModel } from '../../shared/models/CartModel';
+import { CartItemWithDetails, CartModel } from '../../shared/models/CartModel';
 import { SettingsModel } from '../../shared/models/SettingsModel';
 import { PacketaComponent } from '../../shared/packeta/packeta.component';
 import { ProgressHeaderComponent } from '../../shared/progress-header/progress-header.component';
@@ -10,9 +11,10 @@ import { UtilsService } from '../../shared/services/utils.service';
 import { StepCardComponent, StepConfig } from '../../shared/step-card/step-card.component';
 import { CartEmptyComponent } from "./cart-empty/cart-empty.component";
 import { CartBillingDetailsComponent } from './cart-finish-order/cart-billing-details.component';
-import { CartProductsComponent, CartTotals } from "./cart-products/cart-products.component";
+import { CartProductsComponent, PriceTotals } from "./cart-products/cart-products.component";
 import { CartSummaryComponent } from './cart-summary/cart-summary.component';
-import { OrderPostModel } from '../../models/OrderPostModel';
+import { CartPaymentComponent } from "./cart-payment/cart-payment.component";
+import { PacketaPickupPointModel } from '../../shared/packeta/models/PacketaPickupPointModel';
 
 // Remove enum, use constants instead
 const CART_STEPS = {
@@ -27,7 +29,7 @@ const CART_STEPS = {
   selector: 'sb-cart',
   imports: [CommonModule, PacketaComponent, CartEmptyComponent,
     CartProductsComponent, CartSummaryComponent, ProgressHeaderComponent,
-    StepCardComponent, CartBillingDetailsComponent],
+    StepCardComponent, CartBillingDetailsComponent, CartPaymentComponent],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
@@ -35,11 +37,12 @@ export class CartComponent implements OnInit {
   @ViewChild('orderForm') orderFormComponent!: CartBillingDetailsComponent;
 
   productsCount: number = 0;
-  cartTotals: CartTotals = {
-    totalPrice: 0,
-    totalWithoutVat: 0,
-    totalVat: 0
+  cartTotals: PriceTotals = {
+    price: 0,
+    withoutVat: 0,
+    vat: 0
   };
+  cartItemWithDetails: CartItemWithDetails[];
   settings: SettingsModel;
   cart: CartModel[];
 
@@ -48,9 +51,13 @@ export class CartComponent implements OnInit {
   selectedPickupPoint: any = null;
   selectedAddress: any = null;
 
+  selectedPaymentMethod: 'card' | null = null; // This will hold the selected payment method
+
   // Form data
   orderFormData: any = null;
   orderData: OrderPostModel = null; // This will hold the complete order data to be sent to the backend
+
+  shippingPrice: PriceTotals = null; // This will hold the shipping price
 
   currentStep: number = CART_STEPS.PRODUCTS;
   readonly CART_STEPS = CART_STEPS;
@@ -88,6 +95,8 @@ export class CartComponent implements OnInit {
       showActions: true,
       showEditIcon: true,
       disabled: (current) => current < CART_STEPS.PAYMENT,
+      nextDisabled: () => !this.isPaymentSelected()
+
     },
     {
       id: 'form',
@@ -123,6 +132,10 @@ export class CartComponent implements OnInit {
     this.loadCartItems();
   }
 
+  onCartItemWithDetailsCompleted(cartItemWithDetails: CartItemWithDetails[]): void {
+    this.cartItemWithDetails = cartItemWithDetails;
+  }
+
   private loadCartItems(): void {
     this.settingsService.fetchSettings().subscribe(settings => {
       this.settings = settings;
@@ -134,7 +147,7 @@ export class CartComponent implements OnInit {
   }
 
 
-  onCartTotalChanged(cartTotals: CartTotals): void {
+  onCartTotalChanged(cartTotals: PriceTotals): void {
     this.cartTotals = cartTotals;
   }
 
@@ -146,7 +159,6 @@ export class CartComponent implements OnInit {
   setCurrentStepAndScroll(step: number): void {
     this.setCurrentStep(step);
     const stepId = this.getStepElementId(step);
-    console.log('Attempting to scroll to:', stepId);
     this.utilsService.smoothNavigateTo(stepId, 80);
   }
 
@@ -166,7 +178,6 @@ export class CartComponent implements OnInit {
 
     // If we're on the form step (last step before summary), create the order
     if (currentStep === CART_STEPS.FORM) {
-      console.log('Creating order from form data');
       // Trigger form submission
       this.orderFormComponent.onSubmit();
     }
@@ -215,7 +226,7 @@ export class CartComponent implements OnInit {
   getStepSubtitle(step: number): string {
     switch (step) {
       case CART_STEPS.PRODUCTS:
-        return `${this.productsCount} položiek • ${this.cartTotals.totalPrice}€`;
+        return `${this.productsCount} položiek • ${this.cartTotals.price}€`;
       case CART_STEPS.DELIVERY:
         return this.getDeliverySubtitle();
       case CART_STEPS.PAYMENT:
@@ -233,8 +244,12 @@ export class CartComponent implements OnInit {
     this.selectedDeliveryType = deliveryType;
   }
 
-  onPickupPointSelected(point: any): void {
+  onPickupPointSelected(point: PacketaPickupPointModel): void {
     this.selectedPickupPoint = point;
+  }
+
+  onPaymentMethodChanged(selectedPaymentMethod: any): void {
+    this.selectedPaymentMethod = selectedPaymentMethod;
   }
 
   onAddressSelected(address: any): void {
@@ -258,6 +273,11 @@ export class CartComponent implements OnInit {
         (this.selectedDeliveryType === 'address' && this.selectedAddress));
   }
 
+  isPaymentSelected(): boolean {
+    console.log('Selected payment method:', this.selectedPaymentMethod);
+    return this.selectedPaymentMethod && this.selectedPaymentMethod === 'card';
+  }
+
   isBillingFormValid(): boolean {
     return this.orderFormComponent?.orderForm?.valid || false;
   }
@@ -269,6 +289,13 @@ export class CartComponent implements OnInit {
       return this.getDeliveryTypeName();
     }
     return '';
+  }
+
+  onShippingPriceChanged(shippingPrice: number): void {
+    if (shippingPrice !== null) {
+      this.shippingPrice = this.utilsService.calculateVat(shippingPrice, this.settings.vat_rate);
+
+    }
   }
 
   getPaymentSubtitle(): string {
@@ -292,7 +319,6 @@ export class CartComponent implements OnInit {
   }
 
   onOrderFormSubmitted(formData: any): void {
-    console.log('Order form submitted with data:', formData);
     this.orderFormData = formData;
     this.prepareOrderData();
   }

@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { ProductImage } from '../../models/ProductImage.model';
 import { environment } from '../../../environments/environment';
 import { PricePipe } from '../../pipes/price.pipe';
+import { Product } from '../../models/Product.model';
+import { CartItemWithDetails } from '../models/CartModel';
+import { PriceTotals } from '../../pages/cart/cart-products/cart-products.component';
 
 @Injectable({
   providedIn: 'root'
@@ -319,5 +322,36 @@ export class UtilsService {
     }
     return PricePipe.formatPrice(shippingPrice);
   }
+
+  getPrimaryImage(product: Product): string {
+    if (!product || !product.images) {
+      return '';
+    }
+    const primaryImage = product.images.find(img => img.is_primary);
+    return primaryImage?.image_path || product.images[0]?.image_path || '';
+  }
+
+  getColorDisplayName(color: string): string {
+    return color === 'black' ? 'Čierna' : 'Biela';
+  }
+
+  calculateVat(price: number, vatRate: number): PriceTotals {
+    if (!price) {
+      return null;
+    }
+
+    const vatRateDecimal = (vatRate || 0) / 100;
+    const withoutVat = price / (1 + vatRateDecimal);
+    const vat = price - withoutVat;
+
+    const result: PriceTotals = {
+      price: price,
+      withoutVat: withoutVat,
+      vat: vat
+    };
+    return result;
+  }
+
+
 
 }

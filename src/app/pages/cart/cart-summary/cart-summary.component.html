@@ -1,39 +1,216 @@
-<div class="order-summary bg-cc-secondary border rounded-3 p-4">
-    <h4 class="fw-bold mb-4">Súhrn objednávky</h4>
+@if(orderData) {
+<div class="order-summary">
+    <h4 class="fw-bold">Súhrn objednávky</h4>
 
-    <div class="summary-row d-flex justify-content-between mb-2">
-        <span>Bez DPH</span>
-        <span>{{ cartTotals?.totalWithoutVat| sbPrice }}</span>
+    <!-- Billing Details Summary -->
+    @if (orderData.billingData) {
+    <div class="billing-summary bg-light rounded-3 p-3 mb-4">
+        <h6 class="fw-bold mb-3 d-flex align-items-center">
+            <span class="material-symbols-outlined me-2 text-accent">person</span>
+            Fakturačné údaje
+        </h6>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="billing-item">
+                    <small class="text-muted d-block">Meno a priezvisko</small>
+                    <span class="fw-semibold">{{ orderData.billingData.firstName }} {{ orderData.billingData.lastName
+                        }}</span>
+                </div>
+            </div>
+
+            @if (orderData.billingData.isCompany && orderData.billingData.companyName) {
+            <div class="col-md-6">
+                <div class="billing-item">
+                    <small class="text-muted d-block">Spoločnosť</small>
+                    <span class="fw-semibold">{{ orderData.billingData.companyName }}</span>
+                </div>
+            </div>
+            }
+
+            <div class="col-md-6">
+                <div class="billing-item">
+                    <small class="text-muted d-block">Email</small>
+                    <span>{{ orderData.billingData.email }}</span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="billing-item">
+                    <small class="text-muted d-block">Telefón</small>
+                    <span>{{ orderData.billingData.phone }}</span>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="billing-item">
+                    <small class="text-muted d-block">Adresa</small>
+                    <span>{{ orderData.billingData.street }}, {{ orderData.billingData.postalCode }} {{
+                        orderData.billingData.city }}</span>
+                </div>
+            </div>
+
+            @if (orderData.billingData.isCompany) {
+            <div class="col-12">
+                <div class="row g-2">
+                    @if (orderData.billingData.ico) {
+                    <div class="col-md-4">
+                        <div class="billing-item">
+                            <small class="text-muted d-block">IČO</small>
+                            <span class="small">{{ orderData.billingData.ico }}</span>
+                        </div>
+                    </div>
+                    }
+                    @if (orderData.billingData.dic) {
+                    <div class="col-md-4">
+                        <div class="billing-item">
+                            <small class="text-muted d-block">DIČ</small>
+                            <span class="small">{{ orderData.billingData.dic }}</span>
+                        </div>
+                    </div>
+                    }
+                    @if (orderData.billingData.icdph) {
+                    <div class="col-md-4">
+                        <div class="billing-item">
+                            <small class="text-muted d-block">IČ DPH</small>
+                            <span class="small">{{ orderData.billingData.icdph }}</span>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            @if (orderData.billingData.differentShipping && orderData.billingData.shippingAddress) {
+            <div class="col-12">
+                <div class="shipping-address border-top pt-3 mt-2">
+                    <h6 class="fw-bold mb-2 d-flex align-items-center">
+                        <span class="material-symbols-outlined me-2 text-accent">local_shipping</span>
+                        Dodacia adresa
+                    </h6>
+                    <div class="billing-item">
+                        <span>{{ orderData.billingData.shippingAddress.firstName }} {{
+                            orderData.billingData.shippingAddress.lastName }}</span>
+                        @if (orderData.billingData.shippingAddress.companyName) {
+                        <span class="d-block">{{ orderData.billingData.shippingAddress.companyName }}</span>
+                        }
+                        <span class="d-block">{{ orderData.billingData.shippingAddress.street }}, {{
+                            orderData.billingData.shippingAddress.postalCode }} {{
+                            orderData.billingData.shippingAddress.city }}</span>
+                    </div>
+                </div>
+            </div>
+            }
+
+            @if (orderData.billingData.notes) {
+            <div class="col-12">
+                <div class="billing-item border-top pt-3 mt-2">
+                    <small class="text-muted d-block">Poznámka k objednávke</small>
+                    <span class="small">{{ orderData.billingData.notes }}</span>
+                </div>
+            </div>
+            }
+        </div>
     </div>
-    <div class="summary-row d-flex justify-content-between mb-2">
+    }
+
+    <!-- Cart Items Table -->
+    @if (cartItemWithDetails && cartItemWithDetails.length > 0) {
+    <div class="cart-items-table mb-4">
+        <div class="table-responsive">
+            <table class="table table-sm pe-3">
+                <thead>
+                    <tr class="border-bottom">
+                        <th scope="col" class="text-center th-number">#</th>
+                        <th scope="col" class="th-product">Produkt</th>
+                        <th scope="col" class="text-center th-color">Farba</th>
+                        <th scope="col" class="text-center th-quantity">Ks</th>
+                        <th scope="col" class="text-end pe-3 th-price">Cena</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of cartItemWithDetails; track item.product_id + '-' + item.product_variant_id; let i =
+                    $index) {
+                    <tr class="border-bottom">
+                        <td class="text-center align-middle">
+                            <small class="text-muted">{{ i + 1 }}.</small>
+                        </td>
+
+                        <td class="align-middle">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="product-image-small">
+                                    <img [src]="utilsService.getPrimaryImage(item.product!)" [alt]="item.product?.name"
+                                        class="img-fluid rounded me-2">
+                                </div>
+                                <div>
+                                    <div class="fw-bold small">{{ item.product?.name }}</div>
+                                    <div class="text-muted line-1" style="font-size: 0.75rem;">{{
+                                        item.product?.description }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="align-middle text-center">
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <div class="color-indicator d-flex align-items-center gap-1">
+                                    <div class="color-box-mini" [ngClass]="'color-box-' + item.variant?.color">
+                                    </div>
+                                    <span class="small">{{ utilsService.getColorDisplayName(item.variant?.color!)
+                                        }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="align-middle text-center">
+                            <small>{{ item.quantity }} ks</small>
+                        </td>
+                        <td class="align-middle text-end pe-3">
+                            <small class="fw-bold">{{ item.totalPrice | sbPrice }}</small>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+
+
+    <!-- <div class="summary-row d-flex justify-content-between mb-2">
         <span>DPH</span>
         <span>{{ cartTotals?.totalVat| sbPrice }}</span>
-    </div>
+    </div> -->
     <div class="summary-row d-flex justify-content-between mb-2 fw-bold">
         <span>Produkty ({{ productsCount }})</span>
-        <span>{{ cartTotals?.totalPrice| sbPrice }}</span>
+        <span>{{ cartTotals?.price| sbPrice }}</span>
+    </div>
+    <div class="summary-row d-flex justify-content-between mb-2 fw-bold">
+        <span>Doprava ({{ getDeliveryText() }})</span>
+        <span>{{ getShippingPriceText() }}</span>
     </div>
 
     <hr class="my-3">
 
+    <div class="summary-row d-flex justify-content-between">
+        <span>Bez DPH</span>
+        <span>{{ summaryTotals?.withoutVat| sbPrice }}</span>
+    </div>
     <div class="summary-total d-flex justify-content-between mb-4">
-        <span class="fw-bold fs-5">Celkom</span>
-        <span class="fw-bold fs-4 text-accent">{{ cartTotals?.totalPrice | sbPrice }}</span>
+        <span class="fw-bold fs-5">Celkom k úhrade</span>
+        <span class="fw-bold fs-4 text-accent">{{ summaryTotals?.price | sbPrice }}</span>
     </div>
 
     <button class="btn btn-accent w-100 btn-lg mb-3">
         <div class="cc-flex-center-center">
             <span class="material-symbols-outlined me-2">shopping_bag</span>
-            Pokračovať k pokladni
+            Objednať s povinnosťou platby
         </div>
     </button>
 
-    <a routerLink="/obchod" class="btn btn-outline-black w-100">
+    <!-- <a routerLink="/obchod" class="btn btn-outline-black w-100">
         <div class="cc-flex-center-center">
             <span class="material-symbols-outlined me-2">arrow_back</span>
-            Pokračovať v nákupe
+            Objednať viac produktov
         </div>
-    </a>
+    </a> -->
 
     <!-- Benefits -->
     <div class="benefits mt-4">
@@ -53,3 +230,4 @@
         </div>
     </div>
 </div>
+}

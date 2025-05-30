@@ -35,21 +35,7 @@
     max-height: calc(1.4em * 2); // 2 lines with line-height 1.4
 }
 
-.color-box-mini {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
 
-    &.color-box-black {
-        background-color: #000;
-    }
-
-    &.color-box-white {
-        background-color: #fff;
-        border-color: #ccc;
-    }
-}
 
 .col-img {
     max-width: 100px;
@@ -80,5 +66,49 @@
         width: 100%;
         height: 60px;
         object-fit: cover;
+    }
+}
+
+.cart-table {
+    .cart-item {
+        td {
+            vertical-align: middle;
+        }
+    }
+
+    // Responsive behavior for mobile
+    @media (max-width: 991.98px) {
+        .cart-item {
+            display: block;
+            //border: none !important;
+            padding: 0 !important;
+
+            td {
+                display: block;
+                border: none !important;
+                padding: 0 !important;
+            }
+
+            // First cell contains product info
+            td:first-child {
+                padding: 1rem !important;
+            }
+
+            // Second and third cells arranged horizontally
+            td:nth-child(2),
+            td:nth-child(3) {
+                display: inline-block;
+                width: 50%;
+                padding: 0.5rem 1rem !important;
+            }
+
+            td:nth-child(2) {
+                text-align: left !important;
+            }
+
+            td:nth-child(3) {
+                text-align: right !important;
+            }
+        }
     }
 }

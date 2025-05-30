@@ -1,0 +1,60 @@
+@use '../../../../styles/variables' as *;
+@use 'sass:color';
+
+.free-shipping-banner {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid $color_accent;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, $color_accent, color.adjust($color_accent, $lightness: 10%));
+    }
+
+    &.success {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-color: $color_accent;
+
+        &::before {
+            background: linear-gradient(90deg, $color_accent, color.adjust($color_accent, $lightness: 15%));
+        }
+    }
+
+    .shipping-icon {
+        background: rgba($color_accent, 0.1);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        @media (min-width: 768px) {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+        }
+    }
+
+    .progress {
+        border-radius: 3px;
+        background-color: rgba(0, 0, 0, 0.1);
+
+        .progress-bar {
+            background-color: $color_accent;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+    }
+}

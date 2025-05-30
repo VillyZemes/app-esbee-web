@@ -1,8 +1,70 @@
+@use '../../../../styles/variables' as *;
 
 .order-summary {
 
     .summary-total {
-        border-top: 2px solid #e9ecef;
         padding-top: 1rem;
     }
+}
+
+.line-1 {
+    display: -webkit-box;
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+    max-height: calc(1.4em * 1); // 2 lines with line-height 1.4
+}
+
+.product-image-small {
+    img {
+        min-width: 40px;
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+}
+
+.th-number {
+    width: 5%;
+    min-width: 30px;
+}
+
+.th-product {
+    width: 65%;
+    min-width: 200px;
+}
+
+.th-color {
+    width: 10%;
+    min-width: 100px;
+}
+
+.th-quantity {
+    width: 10%;
+    min-width: 80px;
+}
+
+.th-price {
+    width: 10%;
+    min-width: 80px;
+}
+
+.billing-summary {
+  background-color: rgba($color_accent, 0.05) !important;
+  border: 1px solid rgba($color_accent, 0.1);
+  
+  .billing-item {
+    margin-bottom: 0.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .shipping-address {
+    border-top-color: rgba($color_accent, 0.2) !important;
+  }
 }

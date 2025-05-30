@@ -1,46 +1,44 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { Product } from '../../../models/Product.model';
-import { ProductVariant } from '../../../models/ProductVariant.model';
-import { CartModel } from '../../../shared/models/CartModel';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { forkJoin } from 'rxjs';
+import { Product } from '../../../models/Product.model';
+import { PricePipe } from '../../../pipes/price.pipe';
 import { CartService } from '../../../services/cart.service';
 import { ProductsService } from '../../../services/products.service';
 import { SettingsService } from '../../../services/settings.service';
-import { SettingsModel } from '../../../shared/models/SettingsModel';
+import { CartItemWithDetails, CartModel } from '../../../shared/models/CartModel';
 import { MessageService } from '../../../shared/services/message.service';
 import { UtilsService } from '../../../shared/services/utils.service';
-import { CommonModule } from '@angular/common';
-import { PricePipe } from '../../../pipes/price.pipe';
+import { SettingsModel } from '../../../shared/models/SettingsModel';
+import { BannerFreeShippingComponent } from "../../../shared/components/banner-free-shipping/banner-free-shipping.component";
 
-interface CartItemWithDetails extends CartModel {
-  product?: Product;
-  variant?: ProductVariant;
-  totalPrice?: number;
-}
 
-export interface CartTotals {
-  totalPrice: number;
-  totalWithoutVat: number;
-  totalVat: number;
+
+export interface PriceTotals {
+  price: number;
+  withoutVat: number;
+  vat: number;
   //productsCount?: number;
 }
 
 @Component({
   selector: 'sb-cart-products',
-  imports: [CommonModule, PricePipe],
+  imports: [CommonModule, PricePipe, BannerFreeShippingComponent],
   templateUrl: './cart-products.component.html',
   styleUrl: './cart-products.component.scss'
 })
 export class CartProductsComponent {
-  @Output() cartTotalsChanged = new EventEmitter<CartTotals>();
+  @Input() settings: SettingsModel;
+  @Output() cartTotalsChanged = new EventEmitter<PriceTotals>();
+  @Output() cartItemWithDetailsCompleted = new EventEmitter<CartItemWithDetails[]>();
 
   cartItems: CartItemWithDetails[] = [];
   isLoading = true;
 
-  cartTotals: CartTotals = {
-    totalPrice: 0,
-    totalWithoutVat: 0,
-    totalVat: 0,
+  cartTotals: PriceTotals = {
+    price: 0,
+    withoutVat: 0,
+    vat: 0,
   };
 
   constructor(
@@ -60,9 +58,9 @@ export class CartProductsComponent {
       if (cartItems.length === 0) {
         this.cartItems = [];
         this.cartTotals = {
-          totalPrice: 0,
-          totalWithoutVat: 0,
-          totalVat: 0,
+          price: 0,
+          withoutVat: 0,
+          vat: 0,
         };
         this.cartTotalsChanged.emit(this.cartTotals);
         this.isLoading = false;
@@ -119,6 +117,7 @@ export class CartProductsComponent {
         });
 
         this.calculateTotal();
+        this.cartItemWithDetailsCompleted.emit(this.cartItems);
         this.isLoading = false;
       });
     });
@@ -154,12 +153,13 @@ export class CartProductsComponent {
     }).filter(item => (item as CartItemWithDetails).product); // Only keep items that have product data
 
     this.calculateTotal();
+    this.cartItemWithDetailsCompleted.emit(this.cartItems);
   }
 
   private calculateTotal(): void {
-    this.cartTotals.totalPrice = this.cartItems.reduce((total, item) => total + (item.totalPrice || 0), 0);
+    this.cartTotals.price = this.cartItems.reduce((total, item) => total + (item.totalPrice || 0), 0);
 
-    this.cartTotals.totalVat = this.cartItems.reduce((total, item) => {
+    this.cartTotals.vat = this.cartItems.reduce((total, item) => {
       const totalPrice = item.totalPrice || 0;
       const vatRate = (item.product?.vat || 0) / 100;
       const priceWithoutVat = totalPrice / (1 + vatRate);
@@ -167,7 +167,7 @@ export class CartProductsComponent {
       return total + vatAmount;
     }, 0);
 
-    this.cartTotals.totalWithoutVat = this.cartTotals.totalPrice - this.cartTotals.totalVat;
+    this.cartTotals.withoutVat = this.cartTotals.price - this.cartTotals.vat;
 
     this.cartTotalsChanged.emit(this.cartTotals);
   }
@@ -190,17 +190,7 @@ export class CartProductsComponent {
     this.messageService.showSuccess('Košík bol vyprázdnený');
   }
 
-  getPrimaryImage(product: Product): string {
-    if (!product || !product.images) {
-      return '';
-    }
-    const primaryImage = product.images.find(img => img.is_primary);
-    return primaryImage?.image_path || product.images[0]?.image_path || '';
-  }
 
-  getColorDisplayName(color: string): string {
-    return color === 'black' ? 'Čierna' : 'Biela';
-  }
 
 
 }

@@ -13,11 +13,11 @@
     }
 
     &.completed {
-        border-color: color.scale($color_accent, $lightness: 40%);
+        //border-color: color.scale($color_accent, $lightness: 40%);
 
         .step-card-header {
-            background: linear-gradient(135deg, color.scale($color_accent, $lightness: 50%) 0%, color.scale($color_accent, $lightness: 60%) 100%);
-            color: white;
+            //background: linear-gradient(135deg, color.scale($color_accent, $lightness: 50%) 0%, color.scale($color_accent, $lightness: 60%) 100%);
+            color: $color_accent;
             cursor: pointer;
         }
     }
@@ -58,7 +58,8 @@
     }
 
     &.completed .step-card-header .step-number {
-        background-color: white;
+        background-color: rgba($color_accent, 0.1);
+        ;
         border-color: white;
         color: $color_accent;
 

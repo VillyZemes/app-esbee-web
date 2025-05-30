@@ -1,1 +1,24 @@
-<p>cart-payment works!</p>
+<div>
+    <div class="border rounded p-3 mb-3" [class.border-primary]="paymentMethod === 'card'"
+        [class.bg-light]="paymentMethod === 'card'">
+        <label class="d-flex flex-column flex-md-row align-items-start align-items-md-center w-100">
+            <div class="d-flex align-items-center justify-content-start mb-2 mb-md-0">
+                <input type="radio" name="payment-method" value="card" [(ngModel)]="paymentMethod"
+                    (change)="onPaymentMethodChange($event)" class="form-check-input me-3 my-0">
+                <img src="payment/gopay.svg" alt="GoPay" class="me-3" style="height: 32px; width: auto;">
+            </div>
+            <div class="flex-grow-1">
+                <div class="fw-semibold">Online platba kartou</div>
+                <div class="text-muted small">
+                    Bezpečná platba kartou cez zabezpečenú bránu. Podporujeme Visa, Mastercard a ďalšie karty.
+                </div>
+                <div class="payment-cards mt-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">credit_card</span>
+                        <small class="text-muted">Visa, Mastercard, Apple Pay, Google Pay</small>
+                    </div>
+                </div>
+            </div>
+        </label>
+    </div>
+</div>

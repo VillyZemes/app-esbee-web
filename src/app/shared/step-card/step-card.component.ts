@@ -25,7 +25,7 @@ export class StepCardComponent {
   @Input() config!: StepConfig;
   @Input() currentStep: number = 1;
   @Input() nextButtonDisabled: boolean = false;
-  
+
   @Output() stepClicked = new EventEmitter<number>();
   @Output() nextClicked = new EventEmitter<void>();
   @Output() backClicked = new EventEmitter<void>();
