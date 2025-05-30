@@ -4,18 +4,18 @@
 
     <div class="cart-item p-3 border-bottom">
 
-        <div class="row align-items-center justify-content-between">
+        <div class="d-flex align-items-center justify-content-between">
             <!-- Product Image -->
-            <div class="col-md-2 col-img col-3 cursor-pointer" (click)="openProduct(item.product!)">
+            <div class="col-img cursor-pointer" (click)="openProduct(item.product!)">
                 <div class="product-image">
                     <img [src]="getPrimaryImage(item.product!)" [alt]="item.product?.name" class="img-fluid rounded">
                 </div>
             </div>
 
             <!-- Product Info -->
-            <div class="col-md-6 col-9 cursor-pointer" (click)="openProduct(item.product!)">
+            <div class="flex-grow-1 px-3 cursor-pointer" (click)="openProduct(item.product!)">
                 <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-0">
-                    <span class="fw-bold">{{ item.product?.name }}</span>
+                    <span class="fw-bold me-2">{{ item.product?.name }}</span>
                     <div class="d-flex align-items-center gap-2">
                         <span class="small d-none d-sm-inline">Farba:</span>
                         <div class="color-indicator d-flex align-items-center gap-1">
@@ -31,7 +31,7 @@
             </div>
 
             <!-- Quantity Controls -->
-            <div class="col-md-2 col-6 mt-3 mt-md-0">
+            <div class="col-controls">
                 <div class="quantity-controls d-flex align-items-center justify-content-center">
                     <button class="btn btn-outline-secondary btn-sm quantity-btn"
                         (click)="updateQuantity(item, item.quantity - 1)">
@@ -47,7 +47,7 @@
             </div>
 
             <!-- Price & Remove -->
-            <div class="col-md-2 col-6 col-price mt-3 mt-md-0 text-end">
+            <div class="col-price text-end">
                 <div class="price-section">
                     <p class="fw-bold fs-6 mb-1 ">{{ item.totalPrice |
                         sbPrice }}</p>

@@ -1,31 +1,34 @@
-import { Component, OnInit, OnDestroy, Inject, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
-import { PricePipe } from '../../pipes/price.pipe';
-import { PacketaPickupPointModel } from './models/PacketaPickupPointModel';
+import { SettingsModel } from '../models/SettingsModel';
+import { UtilsService } from '../services/utils.service';
 import { PacketaAddressModel } from './models/PacketaAddressModel';
 import { PacketaOptionsModel } from './models/PacketaOptionsModel';
+import { PacketaPickupPointModel } from './models/PacketaPickupPointModel';
 
 declare const Packeta: any;
 
 @Component({
   selector: 'sb-packeta',
-  imports: [FormsModule, CommonModule, PricePipe],
+  imports: [FormsModule, CommonModule],
   templateUrl: './packeta.component.html',
   styleUrl: './packeta.component.scss'
 })
 export class PacketaComponent implements OnInit, OnDestroy {
   @Input() options: PacketaOptionsModel;
+  @Input() settings: SettingsModel;
+  @Input() totalPrice: number = 0;
   @Output() pickupPointSelected = new EventEmitter<PacketaPickupPointModel | null>();
   @Output() addressSelected = new EventEmitter<PacketaAddressModel | null>();
-  @Output() deliveryTypeChanged = new EventEmitter<string>();
+  @Output() deliveryTypeChanged = new EventEmitter<'pickup' | 'address'>();
 
   selectedPointText = '';
   selectedPickupPoint: any = null;
   selectedAddressText = '';
   selectedAddress: any = null;
-  deliveryType = '';
+  deliveryType: 'pickup' | 'address' = null;
 
   private readonly packetaApiKey = environment.packetaApiKey;
   private isWidgetOpen = false;
@@ -46,6 +49,10 @@ export class PacketaComponent implements OnInit, OnDestroy {
     language: "sk",
     centerCountry: "sk",
   };
+
+  constructor(
+    public utilsService: UtilsService,
+  ) { }
 
   ngOnInit(): void {
     if (this.options) {
@@ -90,10 +97,10 @@ export class PacketaComponent implements OnInit, OnDestroy {
       this.isWidgetOpen = true;
       PacketaComponent.isAnyWidgetOpen = true;
 
-      const callbackFunction = this.deliveryType === 'pickup' 
+      const callbackFunction = this.deliveryType === 'pickup'
         ? this.showSelectedPickupPoint.bind(this)
         : this.showSelectedAddress.bind(this);
-      
+
       // Create a wrapper callback to ensure it's always called
       const wrappedCallback = (result: any) => {
         callbackFunction(result);
@@ -140,8 +147,8 @@ export class PacketaComponent implements OnInit, OnDestroy {
       // Widget was closed without selection - reset delivery type
       this.selectedPointText = '';
       this.selectedPickupPoint = null;
-      this.deliveryType = '';
-      this.deliveryTypeChanged.emit('');
+      this.deliveryType = null;
+      this.deliveryTypeChanged.emit(null);
       this.pickupPointSelected.emit(null);
     }
   }
@@ -160,8 +167,8 @@ export class PacketaComponent implements OnInit, OnDestroy {
       // Widget was closed without selection - reset delivery type
       this.selectedAddressText = '';
       this.selectedAddress = null;
-      this.deliveryType = '';
-      this.deliveryTypeChanged.emit('');
+      this.deliveryType = null;
+      this.deliveryTypeChanged.emit(null);
       this.addressSelected.emit(null);
     }
   }

@@ -1,3 +1,4 @@
+@if (settings && totalPrice) {
 <div>
     <div class="border rounded p-3 mb-3" [class.border-primary]="deliveryType === 'pickup'"
         [class.bg-light]="deliveryType === 'pickup'">
@@ -8,7 +9,10 @@
                 <img src="packeta/Packeta logo.png" alt="Packeta" class="me-3" style="height: 32px; width: auto;">
             </div>
             <div class="flex-grow-1">
-                <div class="fw-semibold">Packeta – Výdajné miesto a Z-BOX ({{ 2.99 | sbPrice }})</div>
+                <div class="fw-semibold">Packeta – Výdajné miesto a Z-BOX ({{
+                    utilsService.getShippingPriceText(totalPrice, settings.shipping_packeta_pudo,
+                    settings.shipping_free_threshold) }})
+                </div>
                 <div class="text-muted small">Objednávky prijaté v pondelok až piatok do 12:00 doručujeme
                     nasledujúci pracovný deň.</div>
                 <div *ngIf="deliveryType === 'pickup' && selectedPointText" class="mt-2 p-2 bg-light rounded small">
@@ -27,7 +31,9 @@
                 <img src="packeta/Packeta logo.png" alt="Packeta" class="me-3" style="height: 32px; width: auto;">
             </div>
             <div class="flex-grow-1">
-                <div class="fw-semibold">Packeta – Doručenie na adresu ({{ 2.99 | sbPrice }})</div>
+                <div class="fw-semibold">Packeta – Doručenie na adresu ({{
+                    utilsService.getShippingPriceText(totalPrice, settings.shipping_packeta_home,
+                    settings.shipping_free_threshold) }})</div>
                 <div class="text-muted small">Objednávky prijaté v pondelok až piatok do 12:00 doručujeme
                     nasledujúci pracovný deň.</div>
                 <div *ngIf="deliveryType === 'address' && selectedAddressText" class="mt-2 p-2 bg-light rounded small">
@@ -54,3 +60,4 @@
         </label>
     </div> -->
 </div>
+}

@@ -53,10 +53,17 @@
 
 .col-img {
     max-width: 100px;
+    flex-shrink: 0;
 }
 
 .col-price {
     max-width: 80px;
+    flex-shrink: 0;
+}
+
+.col-controls {
+    max-width: 150px;
+    flex-shrink: 0;
 }
 
 

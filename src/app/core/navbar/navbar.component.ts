@@ -43,7 +43,7 @@ export class NavbarComponent implements AfterViewInit, OnInit {
     });
 
     this.settingsService.fetchSettings().subscribe(settings => {
-      this.freeShippingThreshold = settings?.free_shipping_threshold;
+      this.freeShippingThreshold = settings?.shipping_free_threshold;
     });
   }
 

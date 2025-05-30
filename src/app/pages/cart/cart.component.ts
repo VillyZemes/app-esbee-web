@@ -1,15 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { SettingsService } from '../../services/settings.service';
+import { CartModel } from '../../shared/models/CartModel';
+import { SettingsModel } from '../../shared/models/SettingsModel';
 import { PacketaComponent } from '../../shared/packeta/packeta.component';
 import { ProgressHeaderComponent } from '../../shared/progress-header/progress-header.component';
 import { UtilsService } from '../../shared/services/utils.service';
 import { StepCardComponent, StepConfig } from '../../shared/step-card/step-card.component';
 import { CartEmptyComponent } from "./cart-empty/cart-empty.component";
-import { CartFinishOrderComponent } from "./cart-finish-order/cart-finish-order.component";
+import { CartBillingDetailsComponent } from './cart-finish-order/cart-billing-details.component';
 import { CartProductsComponent, CartTotals } from "./cart-products/cart-products.component";
 import { CartSummaryComponent } from './cart-summary/cart-summary.component';
+import { OrderPostModel } from '../../models/OrderPostModel';
 
 // Remove enum, use constants instead
 const CART_STEPS = {
@@ -22,23 +25,32 @@ const CART_STEPS = {
 
 @Component({
   selector: 'sb-cart',
-  imports: [CommonModule, PacketaComponent, CartEmptyComponent, CartProductsComponent, CartSummaryComponent, ProgressHeaderComponent, StepCardComponent, CartFinishOrderComponent],
+  imports: [CommonModule, PacketaComponent, CartEmptyComponent,
+    CartProductsComponent, CartSummaryComponent, ProgressHeaderComponent,
+    StepCardComponent, CartBillingDetailsComponent],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
 export class CartComponent implements OnInit {
+  @ViewChild('orderForm') orderFormComponent!: CartBillingDetailsComponent;
+
   productsCount: number = 0;
   cartTotals: CartTotals = {
     totalPrice: 0,
     totalWithoutVat: 0,
     totalVat: 0
   };
-  freeShippingThreshold: number = null;
+  settings: SettingsModel;
+  cart: CartModel[];
 
   // Delivery related properties
-  selectedDeliveryType: string = '';
+  selectedDeliveryType: 'pickup' | 'address' = null;
   selectedPickupPoint: any = null;
   selectedAddress: any = null;
+
+  // Form data
+  orderFormData: any = null;
+  orderData: OrderPostModel = null; // This will hold the complete order data to be sent to the backend
 
   currentStep: number = CART_STEPS.PRODUCTS;
   readonly CART_STEPS = CART_STEPS;
@@ -75,7 +87,7 @@ export class CartComponent implements OnInit {
       showBackButton: true,
       showActions: true,
       showEditIcon: true,
-      disabled: (current) => current < CART_STEPS.PAYMENT
+      disabled: (current) => current < CART_STEPS.PAYMENT,
     },
     {
       id: 'form',
@@ -86,7 +98,8 @@ export class CartComponent implements OnInit {
       showBackButton: true,
       showActions: true,
       showEditIcon: true,
-      disabled: (current) => current < CART_STEPS.FORM
+      disabled: (current) => current < CART_STEPS.FORM,
+      nextDisabled: () => !this.isBillingFormValid()
     },
     {
       id: 'summary',
@@ -112,10 +125,11 @@ export class CartComponent implements OnInit {
 
   private loadCartItems(): void {
     this.settingsService.fetchSettings().subscribe(settings => {
-      this.freeShippingThreshold = settings.free_shipping_threshold || 0;
+      this.settings = settings;
     });
     this.cartService.cart$.subscribe(cartItems => {
       this.productsCount = cartItems.length || 0;
+      this.cart = cartItems;
     });
   }
 
@@ -129,17 +143,43 @@ export class CartComponent implements OnInit {
     this.currentStep = step;
   }
 
+  setCurrentStepAndScroll(step: number): void {
+    this.setCurrentStep(step);
+    const stepId = this.getStepElementId(step);
+    console.log('Attempting to scroll to:', stepId);
+    this.utilsService.smoothNavigateTo(stepId, 80);
+  }
+
+  private getStepElementId(step: number): string {
+    switch (step) {
+      case CART_STEPS.PRODUCTS: return 'step-products';
+      case CART_STEPS.DELIVERY: return 'step-delivery';
+      case CART_STEPS.PAYMENT: return 'step-payment';
+      case CART_STEPS.FORM: return 'step-form';
+      case CART_STEPS.SUMMARY: return 'step-summary';
+      default: return '';
+    }
+  }
+
   goToNextStep(currentStep: number): void {
     const config = this.getStepConfig(currentStep);
+
+    // If we're on the form step (last step before summary), create the order
+    if (currentStep === CART_STEPS.FORM) {
+      console.log('Creating order from form data');
+      // Trigger form submission
+      this.orderFormComponent.onSubmit();
+    }
+
     if (config?.nextStep) {
-      this.setCurrentStep(config.nextStep);
+      this.setCurrentStepAndScroll(config.nextStep);
     }
   }
 
   goToPrevStep(currentStep: number): void {
     const config = this.getStepConfig(currentStep);
     if (config?.prevStep) {
-      this.setCurrentStep(config.prevStep);
+      this.setCurrentStepAndScroll(config.prevStep);
     }
   }
 
@@ -189,7 +229,7 @@ export class CartComponent implements OnInit {
     }
   }
 
-  onDeliveryTypeChanged(deliveryType: string): void {
+  onDeliveryTypeChanged(deliveryType: 'pickup' | 'address'): void {
     this.selectedDeliveryType = deliveryType;
   }
 
@@ -216,6 +256,10 @@ export class CartComponent implements OnInit {
     return this.selectedDeliveryType &&
       ((this.selectedDeliveryType === 'pickup' && this.selectedPickupPoint) ||
         (this.selectedDeliveryType === 'address' && this.selectedAddress));
+  }
+
+  isBillingFormValid(): boolean {
+    return this.orderFormComponent?.orderForm?.valid || false;
   }
 
   getDeliverySubtitle(): string {
@@ -247,8 +291,32 @@ export class CartComponent implements OnInit {
     return '';
   }
 
-  onFinishOrder(orderData: any): void {
-    console.log('Dokončiť objednávku:', orderData);
-    // Implementácia dokončenia objednávky
+  onOrderFormSubmitted(formData: any): void {
+    console.log('Order form submitted with data:', formData);
+    this.orderFormData = formData;
+    this.prepareOrderData();
   }
+
+  private prepareOrderData(): void {
+    // Collect all order data
+    this.orderData = {
+      // Cart data
+      cartItems: this.cart,
+
+      // Delivery data
+      deliveryType: this.selectedDeliveryType,
+      pickupPoint: {
+        id: this.selectedPickupPoint?.id || null,
+        name: this.selectedPickupPoint?.name || null,
+        url: this.selectedPickupPoint?.url || null
+      },
+      // Form data from the form component
+      billingData: this.orderFormData,
+
+      // Settings and metadata
+    };
+
+    console.log('Creating order with complete data:', this.orderData);
+  }
+
 }

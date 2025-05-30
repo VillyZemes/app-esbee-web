@@ -1,0 +1,49 @@
+<div class="form-field" [class.has-success]="control?.valid && (control?.dirty || control?.touched)">
+    <label *ngIf="label" class="form-label" [class.text-danger]="required && isInvalid">
+        {{ label }}
+        <span *ngIf="required" class="text-danger">*</span>
+    </label>
+
+    <!-- Custom Select Dropdown -->
+    <div *ngIf="type === 'select' && options.length > 0" class="custom-select-wrapper">
+        <div class="custom-select" [class.is-invalid]="isInvalid" [class.disabled]="disabled" (click)="toggleDropdown()"
+            #selectElement>
+
+            <div class="selected-option">
+                <span *ngIf="getSelectedOption()?.icon" [class]="getSelectedOption()?.icon.toLowerCase()"></span>
+                <span class="option-label">{{ getSelectedOption()?.label || placeholder || 'Vyberte možnosť' }}</span>
+                <i class="dropdown-arrow">▼</i>
+            </div>
+
+            <div class="dropdown-options" [class.show]="dropdownOpen">
+                <div *ngFor="let option of options" class="dropdown-option" [class.selected]="option.value === value"
+                    (click)="selectOption(option); $event.stopPropagation()">
+                    <span *ngIf="option.icon" [class]="option.icon.toLowerCase()"></span>
+                    <span class="option-label">{{ option.label }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Regular Select (fallback) -->
+    <select *ngIf="type === 'select' && options.length === 0" class="form-select" [class]="selectSizeClass"
+        [class.is-invalid]="isInvalid" [value]="value" [disabled]="disabled" (change)="onInput($event)"
+        (blur)="onBlur()">
+        <option value="" disabled>{{ placeholder }}</option>
+        <option *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
+    </select>
+
+    <!-- Text Input -->
+    <input *ngIf="type !== 'select' && type !== 'textarea'" [type]="type" class="form-control" [class]="sizeClass"
+        [class.is-invalid]="isInvalid" [placeholder]="placeholder" [value]="value" [disabled]="disabled"
+        (input)="onInput($event)" (blur)="onBlur()">
+
+    <!-- Textarea -->
+    <textarea *ngIf="type === 'textarea'" class="form-control" [class]="sizeClass" [class.is-invalid]="isInvalid"
+        [placeholder]="placeholder" [rows]="rows" [value]="value" [disabled]="disabled" (input)="onInput($event)"
+        (blur)="onBlur()"></textarea>
+
+    <div *ngIf="displayErrorMessage" class="invalid-feedback">
+        {{ displayErrorMessage }}
+    </div>
+</div>

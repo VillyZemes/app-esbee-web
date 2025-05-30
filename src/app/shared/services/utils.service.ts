@@ -2,16 +2,15 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductImage } from '../../models/ProductImage.model';
 import { environment } from '../../../environments/environment';
+import { PricePipe } from '../../pipes/price.pipe';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
-
-
   constructor(
-    private router: Router,
+    private router: Router
   ) { }
 
   navigateTo(url: string): void {
@@ -27,7 +26,59 @@ export class UtilsService {
   }
 
   scrollToTop(smooth: boolean = true): void {
-    window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+    // Multiple attempts to ensure scroll to top works in all scenarios
+    window.scrollTo(0, 0);
+
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 0);
+
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: smooth ? 'smooth' : 'instant'
+      });
+    }, 100);
+  }
+
+  initScrollToTopOnPageLoad(): void {
+    // Disable browser scroll restoration
+    if (typeof window !== 'undefined' && 'scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // Force immediate scroll to top
+    this.scrollToTop(false);
+  }
+
+  smoothNavigateTo(elementId: string, offset: number = 0): void {
+    // Add a small delay to ensure DOM is updated
+    setTimeout(() => {
+      const element = document.getElementById(elementId);
+      if (element) {
+        const elementPosition = element.offsetTop - offset;
+        window.scrollTo({
+          top: elementPosition,
+          behavior: 'smooth'
+        });
+      } else {
+        console.warn(`Element with ID '${elementId}' not found`);
+        // Try again after a longer delay
+        setTimeout(() => {
+          const retryElement = document.getElementById(elementId);
+          if (retryElement) {
+            const elementPosition = retryElement.offsetTop - offset;
+            window.scrollTo({
+              top: elementPosition,
+              behavior: 'smooth'
+            });
+          } else {
+            console.error(`Element with ID '${elementId}' still not found after retry`);
+          }
+        }, 300);
+      }
+    }, 100);
   }
 
   /* username(user: User): string {
@@ -250,6 +301,23 @@ export class UtilsService {
     const url = this.router.url;
     const params = new URLSearchParams(url.split('?')[1]);
     return params.get(arg0);
+  }
+
+  getShippingPrice(totalPrice: number, shippingPrice: number, freeShippingThreshold: number): number {
+    if (totalPrice >= freeShippingThreshold) {
+      return 0; // Free shipping
+    }
+    return shippingPrice; // Regular shipping price
+  }
+
+
+
+  getShippingPriceText(totalPrice: number, shippingPrice: number, freeShippingThreshold: number): string {
+    const shippingPriceCalculated = this.getShippingPrice(totalPrice, shippingPrice, freeShippingThreshold);
+    if (shippingPriceCalculated === 0) {
+      return 'Doprava zdarma';
+    }
+    return PricePipe.formatPrice(shippingPrice);
   }
 
 }

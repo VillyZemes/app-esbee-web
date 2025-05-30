@@ -1,4 +1,5 @@
 <div class="container container-top">
+
     <div class="row mt-3">
         <div class="col-12">
             <h2 class="text-uppercase fs-4 sb-ls-6">Nákupný košík</h2>
@@ -20,30 +21,42 @@
                         @for (config of stepConfigs; track config.id) {
                         <sb-step-card [config]="getConfigWithSubtitle(config)" [currentStep]="currentStep"
                             [nextButtonDisabled]="isNextButtonDisabled(config.step)"
-                            (stepClicked)="setCurrentStep($event)" (nextClicked)="goToNextStep(config.step)"
+                            (stepClicked)="setCurrentStepAndScroll($event)" (nextClicked)="goToNextStep(config.step)"
                             (backClicked)="goToPrevStep(config.step)">
 
                             @switch (config.step) {
                             @case (CART_STEPS.PRODUCTS) {
-                            <sb-cart-products (cartTotalsChanged)="onCartTotalChanged($event)"></sb-cart-products>
+                            <div id="step-products">
+                                <sb-cart-products (cartTotalsChanged)="onCartTotalChanged($event)"></sb-cart-products>
+                            </div>
                             }
                             @case (CART_STEPS.DELIVERY) {
-                            <p class="text-muted small mb-3">Vyberte si spôsob doručenia</p>
-                            <sb-packeta (pickupPointSelected)="onPickupPointSelected($event)"
-                                (addressSelected)="onAddressSelected($event)"
-                                (deliveryTypeChanged)="onDeliveryTypeChanged($event)"></sb-packeta>
+                            <div id="step-delivery">
+                                <p class="text-muted small mb-3">Vyberte si spôsob doručenia</p>
+                                <sb-packeta [settings]="settings" [totalPrice]="cartTotals.totalPrice"
+                                    (pickupPointSelected)="onPickupPointSelected($event)"
+                                    (addressSelected)="onAddressSelected($event)"
+                                    (deliveryTypeChanged)="onDeliveryTypeChanged($event)"></sb-packeta>
+                            </div>
                             }
                             @case (CART_STEPS.PAYMENT) {
-                            <p class="text-muted small mb-3">Vyberte si spôsob platby</p>
-                            TODO
+                            <div id="step-payment">
+                                <p class="text-muted small mb-3">Vyberte si spôsob platby</p>
+                                TODO
+                            </div>
                             }
                             @case (CART_STEPS.FORM) {
-                            <sb-cart-finish-order></sb-cart-finish-order>
+                            <div id="step-form">
+                                <sb-cart-billing-details #orderForm [packetaShippingAddress]="selectedAddress"
+                                    (orderSubmitted)="onOrderFormSubmitted($event)"></sb-cart-billing-details>
+                            </div>
                             }
                             @case (CART_STEPS.SUMMARY) {
-                            <sb-cart-summary [cartTotals]="cartTotals" [productsCount]="productsCount"
-                                [freeShippingThreshold]="freeShippingThreshold"
-                                (backToDelivery)="setCurrentStep(CART_STEPS.FORM)"></sb-cart-summary>
+                            <div id="step-summary">
+                                <sb-cart-summary [cartTotals]="cartTotals" [productsCount]="productsCount"
+                                    [freeShippingThreshold]="settings?.shipping_free_threshold"
+                                    (backToDelivery)="setCurrentStepAndScroll(CART_STEPS.FORM)"></sb-cart-summary>
+                            </div>
                             }
                             }
                         </sb-step-card>

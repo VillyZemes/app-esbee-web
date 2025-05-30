@@ -1,0 +1,213 @@
+@if (orderForm) {
+<div class="order-form">
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+        <!-- Billing Information -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <sb-form-field label="Krstné meno" placeholder="Vaše krstné meno" [required]="true"
+                            [control]="orderForm.get('firstName')" formControlName="firstName">
+                        </sb-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <sb-form-field label="Priezvisko" placeholder="Vaše priezvisko" [required]="true"
+                            [control]="orderForm.get('lastName')" formControlName="lastName">
+                        </sb-form-field>
+                    </div>
+                </div>
+
+                <div class="form-check mt-3 p-3 bg-light rounded d-flex align-items-center">
+                    <input class="form-check-input me-3 ms-0 mt-0" type="checkbox" id="isCompany"
+                        formControlName="isCompany">
+                    <label class="form-check-label fw-medium d-flex align-items-center mb-0" for="isCompany">
+                        <i class="fas fa-building me-2"></i>
+                        Fakturovať na firmu
+                    </label>
+                </div>
+
+                <div *ngIf="orderForm.get('isCompany')?.value" class="mt-3 animate-in">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <sb-form-field label="Názov spoločnosti" placeholder="Názov vašej spoločnosti"
+                                [required]="true" [control]="orderForm.get('companyName')"
+                                formControlName="companyName">
+                            </sb-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <sb-form-field label="IČO" placeholder="12345678" [required]="true"
+                                [control]="orderForm.get('ico')" formControlName="ico" formatExample="12345678">
+                            </sb-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <sb-form-field label="DIČ" placeholder="1234567890" [control]="orderForm.get('dic')"
+                                formControlName="dic" formatExample="1234567890">
+                            </sb-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <sb-form-field label="IČ DPH" placeholder="SK1234567890" [control]="orderForm.get('icdph')"
+                                formControlName="icdph" formatExample="SK1234567890">
+                            </sb-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-12">
+                        <sb-form-field label="Ulica a číslo" placeholder="Číslo domu a názov ulice" [required]="true"
+                            [control]="orderForm.get('street')" formControlName="street">
+                        </sb-form-field>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-4">
+                        <sb-form-field label="PSČ" placeholder="123 45" [required]="true"
+                            [control]="orderForm.get('postalCode')" formControlName="postalCode"
+                            [formatExample]="`12345\' alebo \'123 45`">
+                        </sb-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <sb-form-field label="Mesto" placeholder="Vaše mesto" [required]="true"
+                            [control]="orderForm.get('city')" formControlName="city">
+                        </sb-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <sb-form-field label="Krajina / región" type="select" [required]="true"
+                            [options]="countryOptions" [control]="orderForm.get('country')" formControlName="country">
+                        </sb-form-field>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Mobil <span class="text-danger">*</span></label>
+                        <div class="d-flex gap-2">
+                            <div style="flex: 0 0 120px;">
+                                <sb-form-field type="select" placeholder="Kód" [required]="true"
+                                    [options]="countryPhoneOptions" [control]="orderForm.get('phonePrefixCountryCode')"
+                                    formControlName="phonePrefixCountryCode">
+                                </sb-form-field>
+                            </div>
+                            <div style="flex: 1;">
+                                <sb-form-field type="tel" placeholder="123456789" [required]="true"
+                                    [control]="orderForm.get('phone')" formControlName="phone" formatExample="123456789">
+                                </sb-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <sb-form-field label="Email" type="email" placeholder="" [required]="true"
+                            [control]="orderForm.get('email')" formControlName="email"
+                            formatExample="vas.email@priklad.sk">
+                        </sb-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping to Different Address -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="form-check p-3 bg-light rounded d-flex align-items-center">
+                    <input class="form-check-input me-3 mt-0 ms-0" type="checkbox" id="differentShipping"
+                        formControlName="differentShipping">
+                    <label class="form-check-label fw-medium d-flex align-items-center mb-0" for="differentShipping">
+                        <i class="fas fa-truck me-2"></i>
+                        Odoslať na inú adresu?
+                    </label>
+                </div>
+
+                <div *ngIf="orderForm.get('differentShipping')?.value" class="mt-4 animate-in"
+                    formGroupName="shippingAddress">
+                    <h6 class="fw-bold text-primary mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        Adresa doručenia
+                    </h6>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <sb-form-field label="Krstné meno" placeholder="Krstné meno príjemcu" [required]="true"
+                                [control]="orderForm.get('shippingAddress.firstName')" formControlName="firstName">
+                            </sb-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <sb-form-field label="Priezvisko" placeholder="Priezvisko príjemcu" [required]="true"
+                                [control]="orderForm.get('shippingAddress.lastName')" formControlName="lastName">
+                            </sb-form-field>
+                        </div>
+                        <div class="col-12">
+                            <sb-form-field label="Názov spoločnosti" placeholder="Názov spoločnosti (voliteľné)"
+                                [control]="orderForm.get('shippingAddress.companyName')" formControlName="companyName">
+                            </sb-form-field>
+                        </div>
+                        <div class="col-12">
+                            <sb-form-field label="Ulica a číslo" placeholder="Číslo domu a názov ulice"
+                                [required]="true" [control]="orderForm.get('shippingAddress.street')"
+                                formControlName="street">
+                            </sb-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <sb-form-field label="PSČ" placeholder="123 45" [required]="true"
+                                [control]="orderForm.get('shippingAddress.postalCode')" formControlName="postalCode"
+                                [formatExample]="`12345\' alebo \'123 45`">
+                            </sb-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <sb-form-field label="Mesto" placeholder="Mesto doručenia" [required]="true"
+                                [control]="orderForm.get('shippingAddress.city')" formControlName="city">
+                            </sb-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <sb-form-field label="Krajina / región" type="select" [required]="true"
+                                [options]="countryOptions" [control]="orderForm.get('shippingAddress.country')"
+                                formControlName="country">
+                            </sb-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Notes -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold text-dark">
+                    <i class="fas fa-sticky-note me-2"></i>
+                    Poznámky k objednávke
+                </h6>
+            </div>
+            <div class="card-body p-4">
+                <sb-form-field label="" type="textarea"
+                    placeholder="Poznámka k objednávke, napr. upresnenie pre doručenie." [rows]="4"
+                    [control]="orderForm.get('notes')" formControlName="notes">
+                </sb-form-field>
+            </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="acceptTerms" formControlName="acceptTerms"
+                        [class.is-invalid]="isFieldInvalid('acceptTerms')">
+                    <label class="form-check-label" for="acceptTerms">
+                        Súhlasím s <a href="#" class="text-primary">obchodnými podmienkami</a> a
+                        <a href="#" class="text-primary">zásadami ochrany osobných údajov</a> *
+                    </label>
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('acceptTerms')">
+                        Musíte súhlasiť s obchodnými podmienkami
+                    </div>
+                </div>
+
+                <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" id="newsletter" formControlName="newsletter">
+                    <label class="form-check-label" for="newsletter">
+                        Chcem dostávať informácie o novinkách a akciách na email
+                    </label>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+}

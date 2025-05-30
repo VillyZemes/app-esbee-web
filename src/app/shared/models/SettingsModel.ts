@@ -1,5 +1,7 @@
 import { DefaultModel } from "./DefaultModel";
 
 export interface SettingsModel extends DefaultModel {
-    free_shipping_threshold: number;
+    shipping_free_threshold: number;
+    shipping_packeta_pudo: number;
+    shipping_packeta_home: number;
 }

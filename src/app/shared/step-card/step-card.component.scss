@@ -13,7 +13,7 @@
     }
 
     &.completed {
-        border-color: $color_accent;
+        border-color: color.scale($color_accent, $lightness: 40%);
 
         .step-card-header {
             background: linear-gradient(135deg, color.scale($color_accent, $lightness: 50%) 0%, color.scale($color_accent, $lightness: 60%) 100%);
