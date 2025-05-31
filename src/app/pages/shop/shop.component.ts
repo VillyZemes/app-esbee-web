@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Product } from '../../models/Product.model';
-import { UtilsService } from '../../shared/services/utils.service';
+import { ProductModel } from '../../models/Product.model';
 import { PricePipe } from '../../pipes/price.pipe';
-import { ProductsService } from '../../services/products.service';
-import { CartModel } from '../../shared/models/CartModel';
 import { CartService } from '../../services/cart.service';
+import { CartModel } from '../../shared/models/CartModel';
 import { MessageService } from '../../shared/services/message.service';
+import { RecordsDataService } from '../../shared/services/records-data.service';
+import { UtilsService } from '../../shared/services/utils.service';
 
 @Component({
   selector: 'sb-shop',
@@ -17,13 +17,13 @@ export class ShopComponent implements OnInit {
   @Input() asComponent: boolean = false;
 
 
-  products: Product[] = [];
+  products: ProductModel[] = [];
 
   constructor(
     public utilsService: UtilsService,
-    private productsService: ProductsService,
     private cartService: CartService,
     private messageService: MessageService,
+    private recordsDataService: RecordsDataService,
 
   ) {
   }
@@ -32,16 +32,16 @@ export class ShopComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.productsService.getProducts().subscribe((products) => {
-      this.products = products;
+    this.recordsDataService.recordsData$.subscribe((data) => {
+      this.products = data.products;
     });
   }
 
-  openProduct(product: Product): void {
+  openProduct(product: ProductModel): void {
     this.utilsService.navigateTo(`/produkt/${product.slug}`);
   }
 
-  onClickButton(product: Product): void {
+  onClickButton(product: ProductModel): void {
     if (this.asComponent) {
       this.addToCart(product);
     } else {
@@ -49,7 +49,7 @@ export class ShopComponent implements OnInit {
     }
   }
 
-  addToCart(product: Product): void {
+  addToCart(product: ProductModel): void {
     const cartItem: CartModel = {
       product_id: product.id,
       product_variant_id: product.variants?.[0]?.id || 0, // Default to first variant if available

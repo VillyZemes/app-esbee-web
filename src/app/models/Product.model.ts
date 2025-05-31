@@ -1,9 +1,9 @@
 import { DefaultModel } from '../shared/models/DefaultModel';
 import { ProductImage } from './ProductImage.model';
 import { ProductRating } from './ProductRating.model';
-import { ProductVariant } from './ProductVariant.model';
+import { ProductVariantModel } from './ProductVariant.model';
 
-export interface Product extends DefaultModel {
+export interface ProductModel extends DefaultModel {
     name: string;
     slug: string;
     description: string;
@@ -34,6 +34,6 @@ export interface Product extends DefaultModel {
 
     // Relationships
     images?: ProductImage[];
-    variants?: ProductVariant[];
+    variants?: ProductVariantModel[];
 }
 

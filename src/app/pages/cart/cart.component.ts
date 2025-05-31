@@ -2,19 +2,19 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrderPostModel } from '../../models/OrderPost.model';
 import { CartService } from '../../services/cart.service';
-import { SettingsService } from '../../services/settings.service';
 import { CartItemWithDetails, CartModel } from '../../shared/models/CartModel';
 import { SettingsModel } from '../../shared/models/SettingsModel';
+import { PacketaPickupPointModel } from '../../shared/packeta/models/PacketaPickupPointModel';
 import { PacketaComponent } from '../../shared/packeta/packeta.component';
 import { ProgressHeaderComponent } from '../../shared/progress-header/progress-header.component';
+import { RecordsDataService } from '../../shared/services/records-data.service';
 import { UtilsService } from '../../shared/services/utils.service';
 import { StepCardComponent, StepConfig } from '../../shared/step-card/step-card.component';
-import { CartEmptyComponent } from "./cart-empty/cart-empty.component";
 import { CartBillingDetailsComponent } from './cart-billing-details/cart-billing-details.component';
+import { CartEmptyComponent } from "./cart-empty/cart-empty.component";
+import { CartPaymentComponent } from "./cart-payment/cart-payment.component";
 import { CartProductsComponent, PriceTotals } from "./cart-products/cart-products.component";
 import { CartSummaryComponent } from './cart-summary/cart-summary.component';
-import { CartPaymentComponent } from "./cart-payment/cart-payment.component";
-import { PacketaPickupPointModel } from '../../shared/packeta/models/PacketaPickupPointModel';
 
 // Remove enum, use constants instead
 const CART_STEPS = {
@@ -125,7 +125,7 @@ export class CartComponent implements OnInit {
   constructor(
     private cartService: CartService,
     public utilsService: UtilsService,
-    public settingsService: SettingsService,
+    private recordsDataService: RecordsDataService,
   ) { }
 
   ngOnInit(): void {
@@ -137,8 +137,8 @@ export class CartComponent implements OnInit {
   }
 
   private loadCartItems(): void {
-    this.settingsService.fetchSettings().subscribe(settings => {
-      this.settings = settings;
+    this.recordsDataService.recordsData$.subscribe((data) => {
+      this.settings = data.settings;
     });
     this.cartService.cart$.subscribe(cartItems => {
       this.productsCount = cartItems.length || 0;
@@ -274,7 +274,6 @@ export class CartComponent implements OnInit {
   }
 
   isPaymentSelected(): boolean {
-    console.log('Selected payment method:', this.selectedPaymentMethod);
     return this.selectedPaymentMethod && this.selectedPaymentMethod === 'card';
   }
 

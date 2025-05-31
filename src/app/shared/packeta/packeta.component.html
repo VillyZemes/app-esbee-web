@@ -1,11 +1,11 @@
 @if (settings && totalPrice) {
 <div>
-    <div class="border rounded p-3 mb-3" [class.border-primary]="deliveryType === 'pickup'"
+    <div class="border rounded p-3 mb-3 cursor-pointer" [class.border-primary]="deliveryType === 'pickup'"
         [class.bg-light]="deliveryType === 'pickup'">
-        <label class="d-flex flex-column flex-md-row align-items-start align-items-md-center w-100">
+        <label class="d-flex flex-column flex-md-row align-items-start align-items-md-center w-100 cursor-pointer">
             <div class="d-flex align-items-center justify-content-start mb-2 mb-md-0">
                 <input type="radio" name="packeta-delivery" value="pickup" [(ngModel)]="deliveryType"
-                    (change)="onDeliveryTypeChange($event)" class="form-check-input me-3 my-0">
+                    (change)="onDeliveryTypeChange($event)" class="form-check-input me-3 my-0 cursor-pointer">
                 <img src="packeta/Packeta logo.png" alt="Packeta" class="me-3" style="height: 32px; width: auto;">
             </div>
             <div class="flex-grow-1">
@@ -22,12 +22,12 @@
         </label>
     </div>
 
-    <div class="border rounded p-3 mb-3" [class.border-primary]="deliveryType === 'address'"
+    <div class="border rounded p-3 mb-3 cursor-pointer" [class.border-primary]="deliveryType === 'address'"
         [class.bg-light]="deliveryType === 'address'">
-        <label class="d-flex flex-column flex-md-row align-items-start align-items-md-center w-100">
+        <label class="d-flex flex-column flex-md-row align-items-start align-items-md-center w-100 cursor-pointer">
             <div class="d-flex align-items-center justify-content-start mb-2 mb-md-0">
                 <input type="radio" name="packeta-delivery" value="address" [(ngModel)]="deliveryType"
-                    (change)="onDeliveryTypeChange($event)" class="form-check-input me-3 my-0">
+                    (change)="onDeliveryTypeChange($event)" class="form-check-input me-3 my-0 cursor-pointer">
                 <img src="packeta/Packeta logo.png" alt="Packeta" class="me-3" style="height: 32px; width: auto;">
             </div>
             <div class="flex-grow-1">

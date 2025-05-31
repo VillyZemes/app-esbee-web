@@ -1,25 +1,31 @@
-import { Component, AfterViewInit, HostListener, OnInit } from '@angular/core';
-import { IconFontAwesomeService } from '../../shared/services/icon-font-awesome.service';
 import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
-import { CartService } from '../../services/cart.service';
 import { Observable } from 'rxjs';
-import { SettingsService } from '../../services/settings.service';
+import { filter } from 'rxjs/operators';
+import { COMPANY_CONSTANTS } from '../../constants/Company.constants';
+import { PromoCodeModel } from '../../models/PromoCode.model';
 import { PricePipe } from '../../pipes/price.pipe';
+import { CartService } from '../../services/cart.service';
+import { IconFontAwesomeService } from '../../shared/services/icon-font-awesome.service';
+import { RecordsDataService } from '../../shared/services/records-data.service';
 
 @Component({
   selector: 'sb-navbar',
-  imports: [CommonModule, FontAwesomeModule, RouterLink, RouterModule, RouterLinkActive, PricePipe],
+  imports: [CommonModule, FontAwesomeModule, PricePipe],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements AfterViewInit, OnInit {
+  companyInfo = COMPANY_CONSTANTS;
   isMobileMenuOpen = false;
   isNavbarHidden = false;
   private lastScrollTop = 0;
-  private scrollThreshold = 100; // Minimum scroll amount before showing/hiding
+  private scrollThreshold = 100;
   freeShippingThreshold: number = null;
+  promoCode: PromoCodeModel = null;
+  currentRoute: string = '';
 
   navlinks: { name: string, link: string }[] = [
     { name: 'Domov', link: '/domov' },
@@ -33,7 +39,8 @@ export class NavbarComponent implements AfterViewInit, OnInit {
   constructor(
     public iconService: IconFontAwesomeService,
     private cartService: CartService,
-    private settingsService: SettingsService,
+    private recordsDataService: RecordsDataService,
+    private router: Router,
   ) {
     this.cartItemsCount$ = new Observable(observer => {
       this.cartService.cart$.subscribe(cartItems => {
@@ -41,15 +48,25 @@ export class NavbarComponent implements AfterViewInit, OnInit {
         observer.next(count);
       });
     });
-
-    this.settingsService.fetchSettings().subscribe(settings => {
-      this.freeShippingThreshold = settings?.shipping_free_threshold;
-    });
   }
 
   ngOnInit(): void {
+    this.recordsDataService.recordsData$.subscribe((data) => {
+      this.freeShippingThreshold = data.settings.shipping_free_threshold;
+      this.promoCode = data.promoCodeFeatured;
+    });
     // Initialize scroll position
     this.lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Listen to route changes
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.currentRoute = event.urlAfterRedirects;
+    });
+
+    // Set initial route
+    this.currentRoute = this.router.url;
   }
 
   ngAfterViewInit() {
@@ -97,5 +114,19 @@ export class NavbarComponent implements AfterViewInit, OnInit {
     }
 
     this.lastScrollTop = st;
+  }
+
+  isLinkActive(link: string): boolean {
+    // Remove leading slash if present for comparison
+    const normalizedLink = link.startsWith('/') ? link.slice(1) : link;
+    const normalizedRoute = this.currentRoute.startsWith('/') ? this.currentRoute.slice(1) : this.currentRoute;
+
+    // Handle home/domov route
+    if (normalizedLink === 'domov' || normalizedLink === '') {
+      return normalizedRoute === '' || normalizedRoute === 'domov';
+    }
+
+    // For other routes, check if current route starts with the link
+    return normalizedRoute.startsWith(normalizedLink);
   }
 }

@@ -2,6 +2,8 @@
 <div class="order-summary">
     <h4 class="fw-bold">Súhrn objednávky</h4>
 
+
+
     <!-- Billing Details Summary -->
     @if (orderData.billingData) {
     <div class="billing-summary bg-light rounded-3 p-3 mb-4">
@@ -186,8 +188,36 @@
         <span>Doprava ({{ getDeliveryText() }})</span>
         <span>{{ getShippingPriceText() }}</span>
     </div>
+    <div class="summary-row d-flex justify-content-between mb-2 fw-bold">
+        <span>Platba (Online platobnou kartou)</span>
+        <span>{{ 0 | sbPrice }}</span>
+    </div>
 
     <hr class="my-3">
+
+    <!-- Promo Code Section -->
+    <div class="promo-code-section bg-light rounded-3 p-3 mb-4">
+        <h6 class="fw-bold mb-3 d-flex align-items-center">
+            <span class="material-symbols-outlined me-2 text-accent">local_offer</span>
+            Využiť zľavový/darčekový poukaz
+        </h6>
+
+        <form [formGroup]="promoForm">
+            <div class="d-flex gap-2 align-items-start">
+                <div class="flex-grow-1">
+                    <sb-form-field placeholder="Zadajte kód poukazu" [control]="promoForm.get('promoCode')"
+                        formControlName="promoCode">
+                    </sb-form-field>
+                </div>
+                <button type="button" class="btn btn-accent cc-flex-center-center" style="height: 50px; padding: 0.75rem 0.9rem !important;"
+                    (click)="validatePromoCode()" [disabled]="!promoCodeValue || isValidatingPromo">
+                    <span *ngIf="isValidatingPromo" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    <span *ngIf="!isValidatingPromo" class="material-symbols-outlined me-1">check</span>
+                    <span *ngIf="!isValidatingPromo">Použiť</span>
+                </button>
+            </div>
+        </form>
+    </div>
 
     <div class="summary-row d-flex justify-content-between">
         <span>Bez DPH</span>
@@ -195,17 +225,31 @@
     </div>
     <div class="summary-total d-flex justify-content-between mb-4">
         <span class="fw-bold fs-5">Celkom k úhrade</span>
-        <span class="fw-bold fs-4 text-accent">{{ summaryTotals?.price | sbPrice }}</span>
+        <span class="fw-bold fs-4 text-accent">
+            @if (appliedPromoCode) {
+            <span class="text-muted small text-decoration-line-through me-2">
+                {{ summaryTotals?.price | sbPrice }}
+            </span>
+            <span>
+                {{ (summaryTotals?.price - appliedPromoCode.promo_code?.discount_amount) | sbPrice }}
+            </span>
+
+            } @else {
+            <span>
+                {{ summaryTotals?.price | sbPrice }}
+            </span>
+            }
+        </span>
     </div>
 
-    <button class="btn btn-accent w-100 btn-lg mb-3">
+    <button class="btn btn-accent w-100 btn-lg mb-3" (click)="onOrderSubmit()">
         <div class="cc-flex-center-center">
             <span class="material-symbols-outlined me-2">shopping_bag</span>
             Objednať s povinnosťou platby
         </div>
     </button>
 
-    <!-- <a routerLink="/obchod" class="btn btn-outline-black w-100">
+    <!-- <a href="/obchod" class="btn btn-outline-black w-100">
         <div class="cc-flex-center-center">
             <span class="material-symbols-outlined me-2">arrow_back</span>
             Objednať viac produktov

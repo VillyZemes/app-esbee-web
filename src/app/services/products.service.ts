@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpCoreService } from '../shared/services/http-core.service';
-import { Product } from '../models/Product.model';
+import { ProductModel } from '../models/Product.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsService extends HttpCoreService {
+export class ProductsServiceDeprecated extends HttpCoreService {
 
   /**
    * Get all products with optional filters and pagination
    */
-  getProducts(): Observable<Product[]> {
+  /* getProducts(): Observable<ProductModel[]> {
     const params: any = {};
 
-    return this.callWebService<Product[]>('GET', 'products', undefined, params);
-  }
+    return this.callWebService<ProductModel[]>('GET', 'products', undefined, params);
+  } */
 
   /**
    * Get a single product by ID or slug
    */
-  getProduct(identifier: string | number): Observable<Product> {
-    return this.callWebService<Product>('GET', `products/${identifier}`);
-  }
+  /* getProduct(identifier: string | number): Observable<ProductModel> {
+    return this.callWebService<ProductModel>('GET', `products/${identifier}`);
+  } */
 
 }

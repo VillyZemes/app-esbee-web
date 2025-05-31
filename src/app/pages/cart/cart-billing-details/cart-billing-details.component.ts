@@ -1,10 +1,10 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CountryModel } from '../../../models/Country.model';
 import { FormFieldComponent, FormFieldOptions } from '../../../shared/form-field/form-field.component';
 import { PacketaAddressModel } from '../../../shared/packeta/models/PacketaAddressModel';
-import { CountryModel } from '../../../models/Country.model';
-import { CountriesService } from '../../../services/countries.service';
+import { RecordsDataService } from '../../../shared/services/records-data.service';
 
 @Component({
   selector: 'sb-cart-billing-details',
@@ -23,25 +23,24 @@ export class CartBillingDetailsComponent implements OnInit {
   countryPhoneOptions: FormFieldOptions[];
 
   constructor(private fb: FormBuilder,
-    private countriesService: CountriesService,
+    private recordsDataService: RecordsDataService,
   ) { }
 
   ngOnInit(): void {
-    this.countriesService.fetchCountries().subscribe(countries => {
-      this.countries = countries;
-      this.countryOptions = countries.map(country => ({
+    this.recordsDataService.recordsData$.subscribe((data) => {
+      this.countries = data.countries;
+      this.countryOptions = this.countries.map(country => ({
         value: country.iso2,
         label: country.name,
         icon: 'fi fi-' + country.iso2.toLowerCase(),
       }));
-      this.countryPhoneOptions = countries.map(country => ({
+      this.countryPhoneOptions = this.countries.map(country => ({
         value: country.iso2,
         label: '(' + country.phone_code + ')',
         icon: 'fi fi-' + country.iso2.toLowerCase(),
       }));
       this.initForm();
     });
-
   }
   //${addressObject?.street} ${addressObject?.houseNumber}, ${addressObject?.city} ${addressObject?.postcode}
   private initForm(): void {
@@ -76,7 +75,7 @@ export class CartBillingDetailsComponent implements OnInit {
     });
 
     // Fill with test data for development
-    //this.fillTestData();
+    this.fillTestData();
 
     // Add conditional validators
     this.orderForm.get('isCompany')?.valueChanges.subscribe(isCompany => {
@@ -190,8 +189,13 @@ export class CartBillingDetailsComponent implements OnInit {
         delete formData.icdph;
       }
 
-      const country = this.countries.find(c => c.iso2.toLowerCase() === formData.phonePrefixCountryCode.toLowerCase());
-      formData.phone = `${country?.phone_code}${formData.phone}`;
+      // Build phone number with country code - add null checks
+      if (formData.phonePrefixCountryCode && formData.phone) {
+        const country = this.countries?.find(c => c.iso2?.toLowerCase() === formData.phonePrefixCountryCode?.toLowerCase());
+        if (country?.phone_code) {
+          formData.phone = `${country.phone_code}${formData.phone}`;
+        }
+      }
       delete formData.phonePrefixCountryCode;
 
       this.orderSubmitted.emit(formData);

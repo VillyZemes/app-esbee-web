@@ -1,0 +1,54 @@
+@if (show && promoCode) {
+<div class="promo-modal-overlay" (click)="closeModal()">
+    <div class="promo-modal" (click)="$event.stopPropagation()">
+        <button type="button" class="promo-modal-close" (click)="closeModal()">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="promo-modal-content">
+            <div class="promo-modal-header">
+                <div class="promo-icon">
+                    <span class="material-symbols-outlined">local_offer</span>
+                </div>
+                <h3 class="promo-title">{{ promoCode.name }}</h3>
+                <p class="promo-subtitle">{{ promoCode.description }}</p>
+            </div>
+
+            <div class="promo-modal-body">
+                <div class="promo-code-display">
+                    <div class="promo-code-label">Váš zľavový kód:</div>
+                    <div class="promo-code-value" (click)="copyPromoCode()">
+                        <span class="code-text">{{ promoCode.code }}</span>
+                        <span class="material-symbols-outlined copy-icon">content_copy</span>
+                    </div>
+                    @if (copied) {
+                    <div class="promo-code-hint">Kód skopírovaný</div>
+                    } @else {
+                    <div class="promo-code-hint">Kliknite pre skopírovanie</div>
+                    }
+                </div>
+
+                <div class="promo-details">
+                    <div class="promo-detail-item">
+                        <span class="material-symbols-outlined">percent</span>
+                        <span>Zľava: {{ promoCode.discount_value }}{{ promoCode.discount_type === 'percentage' ? '%' :
+                            '€' }}</span>
+                    </div>
+                    @if (promoCode.minimum_order_value) {
+                    <div class="promo-detail-item">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        <span>Minimálna hodnota objednávky: {{ promoCode.minimum_order_value }}€</span>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <div class="promo-modal-footer">
+                <button type="button" class="btn btn-accent" (click)="goToShop()">
+                    Rozumiem, pokračovať do obchodu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+}

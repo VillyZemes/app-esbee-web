@@ -6,10 +6,10 @@ import { HttpCoreService } from '../shared/services/http-core.service';
 @Injectable({
   providedIn: 'root'
 })
-export class SettingsService extends HttpCoreService {
+export class SettingsServiceDeprecated extends HttpCoreService {
 
-  fetchSettings(): Observable<SettingsModel> {
+  /* fetchSettings(): Observable<SettingsModel> {
     return this.callWebService<SettingsModel>('GET', `settings`);
-  }
+  } */
 
 }

@@ -1,30 +1,65 @@
 <div class="position-absolute top-0 w-100 navbar-block" [ngClass]="{'navbar-hidden': isNavbarHidden}">
     <div class="sb-topnav bg-black text-white d-flex justify-content-between px-4 py-2 py-0">
-        <div class="flex-fill text-start d-none d-lg-block">doplnit&#64;test.com</div>
-        @if (freeShippingThreshold) {
-        <div class="flex-fill text-center">Bezplatná doprava nad {{ freeShippingThreshold | sbPrice }}</div>
+        <div class="flex-fill text-start d-none d-lg-block">
+            <div class="benefit-item d-flex align-items-center mb-2">
+                <span class="material-symbols-outlined text-success me-2">verified</span>
+                <span>Záruka kvality</span>
+            </div>
+        </div>
+
+        @if (promoCode) {
+        <div class="flex-fill text-center">
+            <div class="d-flex align-items-center justify-content-center">
+                <span
+                    class="d-none d-sm-inline material-symbols-outlined sb-icon-outlined sb-fs-20 me-2 text-success">local_offer</span>
+                <span class="d-none d-sm-inline me-1">{{ promoCode?.name }}</span>
+                <span class="d-inline d-sm-none me-1">Kód</span>
+                <span class="me-1 fw-bold text-accent">{{ promoCode?.code }}</span>
+                <span> - {{ promoCode?.description }}</span>
+            </div>
+        </div>
+        } @else if (freeShippingThreshold) {
+        <!-- Show free shipping in center on small devices when no promo code -->
+        <div class="flex-fill text-center d-block d-lg-none">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="material-symbols-outlined sb-icon-outlined sb-fs-20 me-2 text-success">local_shipping</span>
+                <span class="d-none d-sm-inline">Bezplatná doprava nad</span>
+                <span class="d-inline d-sm-none">Doprava zdarma nad</span>
+                <span class="ms-1 fw-bold">{{ freeShippingThreshold | sbPrice }}</span>
+            </div>
+        </div>
         }
-        <div class="flex-fill text-end d-none d-lg-block">Placeholder doplnit</div>
+
+        @if (freeShippingThreshold) {
+        <div class="flex-fill text-end d-none d-lg-block">
+            <div class="d-flex align-items-center justify-content-end">
+                <span
+                    class="material-symbols-outlined sb-icon-outlined sb-fs-20 me-2 text-success">local_shipping</span>
+                Bezplatná doprava nad
+                <span class="ms-1 fw-bold">{{ freeShippingThreshold | sbPrice }}</span>
+            </div>
+        </div>
+        }
+
     </div>
 
     <nav class="navbar navbar-expand-lg bg-white border-bottom d-none d-lg-flex">
         <div class="cc-flex-center container d-flex align-items-center">
 
-            <a class="navbar-brand" routerLink="domov">
-                <img src="logo/logo.png" alt="Logo" class="img-fluid">
+            <a class="navbar-brand" href="domov">
+                <img src="logo/esbee-logo-hb.png" alt="Logo" class="img-fluid">
             </a>
 
             <div class="d-flex gap-3 text-uppercase sb-ls-1 flex-grow-1 justify-content-center align-items-center">
                 @for (link of navlinks; track $index) {
-                <a class="nav-link sb-font-small px-2 sb-text-nowrap" [routerLink]="link.link"
-                    routerLinkActive="active">{{ link.name }}</a>
-
+                <a class="nav-link sb-font-small px-2 sb-text-nowrap" [href]="link.link"
+                    [class.active]="isLinkActive(link.link)">{{ link.name }}</a>
                 }
             </div>
 
             <div class="d-flex justify-content-end align-items-center gap-3 flex-shrink-0 ms-3">
                 <div class="nav-link d-flex align-items-center gap-4">
-                    <a class="d-flex align-items-center gap-1 text-decoration-none text-dark" routerLink="/kosik">
+                    <a class="d-flex align-items-center gap-1 text-decoration-none text-dark" href="/kosik">
                         <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">shopping_cart</span>
                         <span class="sb-fs-14">( {{ cartItemsCount$ | async }} )</span>
                     </a>
@@ -43,13 +78,13 @@
 
     <nav class="navbar navbar-expand-lg bg-white border-bottom d-flex d-lg-none">
         <div class="container-fluid d-flex align-items-center">
-            <a class="navbar-brand" routerLink="domov">
-                <img src="logo/logo.png" alt="Logo" class="img-fluid">
+            <a class="navbar-brand" href="domov">
+                <img src="logo/esbee-logo-hb.png" alt="Logo" class="img-fluid">
             </a>
 
             <div class="d-flex justify-content-end align-items-center gap-3" style="width: 38%;">
                 <div class="nav-link d-flex align-items-center gap-4">
-                    <a class="d-flex align-items-center gap-1 text-decoration-none text-dark" routerLink="/kosik">
+                    <a class="d-flex align-items-center gap-1 text-decoration-none text-dark" href="/kosik">
                         <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">shopping_cart</span>
                         <span class="sb-fs-14">( {{ cartItemsCount$ | async }} )</span>
                     </a>
@@ -64,9 +99,8 @@
         <div class="mobile-dropdown" [ngClass]="{'mobile-dropdown-open': isMobileMenuOpen}">
             <div class="d-flex flex-column gap-3 p-3">
                 @for (link of navlinks; track $index) {
-                <a class="nav-link sb-font-small px-2 sb-text-nowrap" [routerLink]="link.link"
-                    routerLinkActive="active">{{ link.name }}</a>
-
+                <a class="nav-link sb-font-small px-2 sb-text-nowrap" [href]="link.link"
+                    [class.active]="isLinkActive(link.link)">{{ link.name }}</a>
                 }
                 <span class="d-flex align-items-center gap-1">
                     <span class="material-symbols-outlined sb-icon-outlined sb-fs-22">favorite</span>

@@ -6,6 +6,7 @@ export interface OrderPostModel {
     deliveryType: 'pickup' | 'address';
     pickupPoint?: Partial<PacketaPickupPointModel>;
     billingData: BillingData;
+    promoCode?: string;
 }
 
 export interface BillingData {

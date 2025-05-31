@@ -14,7 +14,7 @@ import { MessageService } from '../../shared/services/message.service';
 })
 export class ContactComponent implements OnInit {
   contactForm: FormGroup;
-  companyInfo = COMPANY_CONSTANTS
+  companyInfo = COMPANY_CONSTANTS;
 
   constructor(private fb: FormBuilder,
     private contactMessagesService: ContactMessagesService,

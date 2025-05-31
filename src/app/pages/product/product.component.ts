@@ -1,16 +1,16 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Product } from '../../models/Product.model';
-import { PricePipe } from '../../pipes/price.pipe';
 import { CommonModule } from '@angular/common';
-import { ProductsService } from '../../services/products.service';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ProductRatingComponent } from '../../shared/components/product-rating/product-rating.component';
 import { SectionEsbeeAboutComponent } from "../../core/section-esbee-about/section-esbee-about.component";
 import { SectionSpecialOffersComponent } from '../../core/section-special-offers/section-special-offers.component';
-import { ProductVariant } from '../../models/ProductVariant.model';
+import { ProductModel } from '../../models/Product.model';
+import { ProductVariantModel } from '../../models/ProductVariant.model';
+import { PricePipe } from '../../pipes/price.pipe';
 import { CartService } from '../../services/cart.service';
+import { ProductRatingComponent } from '../../shared/components/product-rating/product-rating.component';
 import { CartModel } from '../../shared/models/CartModel';
+import { RecordsDataService } from '../../shared/services/records-data.service';
 
 @Component({
   selector: 'sb-product',
@@ -20,32 +20,37 @@ import { CartModel } from '../../shared/models/CartModel';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductComponent implements OnInit {
-  product: Product;
+  product: ProductModel;
   addToCartForm: FormGroup;
   currentMainImage: string = '';
-  selectedVariant: ProductVariant | null = null;
-
+  selectedVariant: ProductVariantModel | null = null;
+  products: ProductModel[] = [];
   subheader = 'Modul + krabička';
 
   constructor(
-    private productsService: ProductsService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private cartService: CartService
+    private cartService: CartService,
+    private recordsDataService: RecordsDataService,
   ) { }
 
   ngOnInit(): void {
     // get the id from the URL route parameters
     const productId = this.route.snapshot.paramMap.get('id');
-    this.loadProduct(productId);
+    this.recordsDataService.recordsData$.subscribe((data) => {
+      this.products = data.products;
+      this.loadProduct(productId);
+    });
+
   }
 
   private loadProduct(productId: string | null): void {
-    // Load product data
+    // Load product data from local array
     if (productId) {
-      this.productsService.getProduct(productId).subscribe(response => {
-        this.product = response;
+      this.product = this.products.find(p => p.slug === productId || p.id.toString() === productId);
+
+      if (this.product) {
         // Set initial main image after product is loaded
         this.currentMainImage = this.getPrimaryImage();
         // Set initial selected variant
@@ -59,7 +64,9 @@ export class ProductComponent implements OnInit {
 
         // Trigger change detection
         this.cdr.detectChanges();
-      });
+      } else {
+        console.error('Product not found:', productId);
+      }
     }
   }
 
@@ -86,16 +93,16 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  getDefaultVariant(): ProductVariant | null {
+  getDefaultVariant(): ProductVariantModel | null {
     return this.product?.variants?.find(variant => variant.is_default) || this.product?.variants?.[0] || null;
   }
 
-  selectVariant(variant: ProductVariant): void {
+  selectVariant(variant: ProductVariantModel): void {
     this.selectedVariant = variant;
     this.addToCartForm.get('variant')?.setValue(variant.id);
   }
 
-  isSelectedVariant(variant: ProductVariant): boolean {
+  isSelectedVariant(variant: ProductVariantModel): boolean {
     return this.selectedVariant?.id === variant.id;
   }
 

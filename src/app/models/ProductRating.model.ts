@@ -1,5 +1,5 @@
 import { DefaultModel } from '../shared/models/DefaultModel';
-import { Product } from './Product.model';
+import { ProductModel } from './Product.model';
 
 export interface ProductRating extends DefaultModel {
     product_id: number;
@@ -10,5 +10,5 @@ export interface ProductRating extends DefaultModel {
     is_active: boolean;
 
     // Relationships
-    product?: Product;
+    product?: ProductModel;
 }

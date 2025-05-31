@@ -1,5 +1,5 @@
 import { DefaultModel } from '../shared/models/DefaultModel';
-import { Product } from './Product.model';
+import { ProductModel } from './Product.model';
 
 export interface ProductImage extends DefaultModel {
     product_id: number;
@@ -13,5 +13,5 @@ export interface ProductImage extends DefaultModel {
     metadata?: any;
 
     // Relationships
-    product?: Product;
+    product?: ProductModel;
 }

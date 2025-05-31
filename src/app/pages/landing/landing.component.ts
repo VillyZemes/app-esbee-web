@@ -29,7 +29,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
   }
 
-  
+
 
 
   // Fix for mobile browsers viewport height

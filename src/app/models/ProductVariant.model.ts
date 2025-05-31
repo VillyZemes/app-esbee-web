@@ -1,8 +1,8 @@
 import { DefaultModel } from '../shared/models/DefaultModel';
-import { Product } from './Product.model';
+import { ProductModel } from './Product.model';
 import { ProductImage } from './ProductImage.model';
 
-export interface ProductVariant extends DefaultModel {
+export interface ProductVariantModel extends DefaultModel {
     product_id: number;
     color: string;
     color_code?: string;
@@ -16,6 +16,6 @@ export interface ProductVariant extends DefaultModel {
     metadata?: any;
 
     // Relationships
-    product?: Product;
+    product?: ProductModel;
     images?: ProductImage[];
 }

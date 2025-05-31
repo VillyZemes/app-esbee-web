@@ -6,10 +6,10 @@ import { HttpCoreService } from '../shared/services/http-core.service';
 @Injectable({
   providedIn: 'root'
 })
-export class CountriesService extends HttpCoreService {
+export class CountriesServiceDeprecated extends HttpCoreService {
 
-  fetchCountries(): Observable<CountryModel[]> {
+  /* fetchCountries(): Observable<CountryModel[]> {
     return this.callWebService<CountryModel[]>('GET', 'countries');
-  }
+  } */
 
 }

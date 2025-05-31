@@ -29,7 +29,6 @@ export class FormFieldComponent implements ControlValueAccessor {
     @Input() rows: number = 4; // For textarea
 
     value: any = '';
-    disabled: boolean = false;
     dropdownOpen: boolean = false;
 
     private onChange = (value: any) => { };
@@ -84,9 +83,7 @@ export class FormFieldComponent implements ControlValueAccessor {
     }
 
     toggleDropdown(): void {
-        if (!this.disabled) {
-            this.dropdownOpen = !this.dropdownOpen;
-        }
+        this.dropdownOpen = !this.dropdownOpen;
     }
 
     selectOption(option: FormFieldOptions): void {
@@ -127,7 +124,4 @@ export class FormFieldComponent implements ControlValueAccessor {
         this.onTouched = fn;
     }
 
-    setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-    }
 }

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ProductImage } from '../../models/ProductImage.model';
 import { environment } from '../../../environments/environment';
 import { PricePipe } from '../../pipes/price.pipe';
-import { Product } from '../../models/Product.model';
+import { ProductModel } from '../../models/Product.model';
 import { CartItemWithDetails } from '../models/CartModel';
 import { PriceTotals } from '../../pages/cart/cart-products/cart-products.component';
 
@@ -13,7 +13,6 @@ import { PriceTotals } from '../../pages/cart/cart-products/cart-products.compon
 export class UtilsService {
 
   constructor(
-    private router: Router
   ) { }
 
   navigateTo(url: string): void {
@@ -25,7 +24,7 @@ export class UtilsService {
   }
 
   routerTo(url: string): void {
-    this.router.navigate([url]);
+    location.href = url;
   }
 
   scrollToTop(smooth: boolean = true): void {
@@ -300,11 +299,11 @@ export class UtilsService {
     return imageSrc;
   }
 
-  getRouteParam(arg0: string) {
+  /* getRouteParam(arg0: string) {
     const url = this.router.url;
     const params = new URLSearchParams(url.split('?')[1]);
     return params.get(arg0);
-  }
+  } */
 
   getShippingPrice(totalPrice: number, shippingPrice: number, freeShippingThreshold: number): number {
     if (totalPrice >= freeShippingThreshold) {
@@ -323,7 +322,7 @@ export class UtilsService {
     return PricePipe.formatPrice(shippingPrice);
   }
 
-  getPrimaryImage(product: Product): string {
+  getPrimaryImage(product: ProductModel): string {
     if (!product || !product.images) {
       return '';
     }

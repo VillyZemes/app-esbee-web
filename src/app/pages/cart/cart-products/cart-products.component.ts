@@ -1,16 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { forkJoin } from 'rxjs';
-import { Product } from '../../../models/Product.model';
+import { ProductModel } from '../../../models/Product.model';
 import { PricePipe } from '../../../pipes/price.pipe';
 import { CartService } from '../../../services/cart.service';
-import { ProductsService } from '../../../services/products.service';
-import { SettingsService } from '../../../services/settings.service';
-import { CartItemWithDetails, CartModel } from '../../../shared/models/CartModel';
-import { MessageService } from '../../../shared/services/message.service';
-import { UtilsService } from '../../../shared/services/utils.service';
-import { SettingsModel } from '../../../shared/models/SettingsModel';
 import { BannerFreeShippingComponent } from "../../../shared/components/banner-free-shipping/banner-free-shipping.component";
+import { CartItemWithDetails, CartModel } from '../../../shared/models/CartModel';
+import { SettingsModel } from '../../../shared/models/SettingsModel';
+import { MessageService } from '../../../shared/services/message.service';
+import { RecordsDataService } from '../../../shared/services/records-data.service';
+import { UtilsService } from '../../../shared/services/utils.service';
 
 
 
@@ -34,6 +32,7 @@ export class CartProductsComponent {
 
   cartItems: CartItemWithDetails[] = [];
   isLoading = true;
+  products: ProductModel[] = [];
 
   cartTotals: PriceTotals = {
     price: 0,
@@ -43,14 +42,17 @@ export class CartProductsComponent {
 
   constructor(
     private cartService: CartService,
-    private productsService: ProductsService,
     private messageService: MessageService,
     public utilsService: UtilsService,
-    public settingsService: SettingsService,
+    private recordsDataService: RecordsDataService,
   ) { }
 
   ngOnInit(): void {
-    this.loadCartItems();
+    this.recordsDataService.recordsData$.subscribe((data) => {
+      this.products = data.products;
+      this.loadCartItems();
+    });
+
   }
 
   private loadCartItems(): void {
@@ -67,63 +69,29 @@ export class CartProductsComponent {
         return;
       }
 
-      // Only fetch products that we don't already have
-      const missingProductIds = cartItems
-        .filter(item => !this.cartItems.find(existing => existing.product_id === item.product_id))
-        .map(item => item.product_id);
+      // Use products from local array instead of fetching from backend
+      this.cartItems = cartItems.map(item => {
+        const product = this.products.find(p => p.id === item.product_id);
+        const variant = product?.variants?.find(v => v.id === item.product_variant_id);
+        const basePrice = parseFloat(product?.price || '0');
+        const adjustment = variant ? parseFloat(variant.price_adjustment) : 0;
+        const totalPrice = (basePrice + adjustment) * item.quantity;
 
-      if (missingProductIds.length === 0) {
-        // We already have all the product data, just update the cart items
-        this.updateCartItemsFromCache(cartItems);
-        return;
-      }
+        return {
+          ...item,
+          product,
+          variant,
+          totalPrice
+        };
+      }).filter(item => item.product); // Only keep items that have product data
 
-      const productRequests = missingProductIds.map(productId =>
-        this.productsService.getProduct(productId.toString())
-      );
-
-      const allRequests = [
-        ...productRequests
-      ];
-
-      forkJoin(allRequests).subscribe(results => {
-        // All results are products since we're not fetching settings
-        const products = results as Product[];
-
-        // Create a product cache map
-        const productCache = new Map();
-        products.forEach(product => productCache.set(product.id, product));
-
-        // Add existing products to cache
-        this.cartItems.forEach(item => {
-          if (item.product) {
-            productCache.set(item.product.id, item.product);
-          }
-        });
-
-        this.cartItems = cartItems.map(item => {
-          const product = productCache.get(item.product_id);
-          const variant = product?.variants?.find(v => v.id === item.product_variant_id);
-          const basePrice = parseFloat(product?.price || '0');
-          const adjustment = variant ? parseFloat(variant.price_adjustment) : 0;
-          const totalPrice = (basePrice + adjustment) * item.quantity;
-
-          return {
-            ...item,
-            product,
-            variant,
-            totalPrice
-          };
-        });
-
-        this.calculateTotal();
-        this.cartItemWithDetailsCompleted.emit(this.cartItems);
-        this.isLoading = false;
-      });
+      this.calculateTotal();
+      this.cartItemWithDetailsCompleted.emit(this.cartItems);
+      this.isLoading = false;
     });
   }
 
-  openProduct(product: Product): void {
+  openProduct(product: ProductModel): void {
     this.utilsService.navigateTo(`/produkt/${product.slug}`);
   }
 
